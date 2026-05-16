@@ -119,6 +119,16 @@
                 <?php 
                     if ($_GET['error'] == 'empty') {
                         echo "Harap isi semua kolom!";
+                    } else if ($_GET['error'] == 'weak') {
+                        echo "Password harus minimal 8 karakter dan mengandung huruf besar, huruf kecil, angka, serta simbol!";
+                    } else if ($_GET['error'] == 'username') {
+                        echo "Username hanya boleh huruf, angka, dan underscore!";
+                    } else if ($_GET['error'] == 'toolong') {
+                        echo "Input terlalu panjang!";
+                    } else if ($_GET['error'] == 'locked') {
+                        echo "Terlalu banyak percobaan registrasi. Coba lagi dalam 5 menit!";
+                    } else if ($_GET['error'] == 'server') {
+                        echo "Terjadi kesalahan server!";
                     } else if ($_GET['error'] == 'mismatch') {
                         echo "Konfirmasi password tidak cocok!";
                     } else if ($_GET['error'] == 'exists') {
@@ -128,7 +138,7 @@
             </div>
         <?php endif; ?>
 
-        <form action="proses_register.php" method="POST">
+        <form action="../process/proses_register.php" method="POST">
             
             <!-- nama lengkap -->
             <div class="form-group"> 
