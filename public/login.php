@@ -3,11 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
     <title>Halaman Login</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
+            background-image: url('asset/login_background.png');
+            background-repeat: no-repeat;
+            background-size: cover; 
+            background-attachment: fixed; 
+            font-family: "Google Sans", sans-serif;
+            background-color: #e4eb9d;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -24,7 +31,7 @@
         }
         .login-card h2 {
             text-align: center;
-            color: #333;
+            color: #915307;
             margin-bottom: 1.5rem;
         }
         .form-group {
@@ -41,7 +48,7 @@
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            box-sizing: border-box; /* Agar padding tidak merusak lebar */
+            box-sizing: border-box; 
         }
         .form-group input:focus {
             border-color: #007bff;
@@ -50,7 +57,7 @@
         .btn-login {
             width: 100%;
             padding: 10px;
-            background-color: #007bff;
+            background-color: #8da750;
             color: white;
             border: none;
             border-radius: 4px;
@@ -59,7 +66,7 @@
             margin-top: 1rem;
         }
         .btn-login:hover {
-            background-color: #0056b3;
+            background-color: #537c2e;
         }
         .error-message {
             color: #dc3545;
@@ -75,10 +82,10 @@
 <body>
 
     <div class="login-card">
-        # title login page
-        <h2>Toko Sembako Indojaya</h2>
+        <!--title login page -->
+        <h2 class = "title">Toko Sembako Indojaya</h2>
 
-        # error handling
+        <!-- error handling -->
         <?php if (isset($_GET['error'])): ?>
             <div class="error-message">
                 <?php 
@@ -95,14 +102,14 @@
         
         <form action="proses_login.php" method="POST">
             
-            # username
+            <!-- username -->
             <div class="form-group"> 
                 <label for="username">Username</label>
 
                 <input type="text" id="username" name="username" required placeholder="e.g John Doe">
             </div>
             
-            # password
+            <!-- password -->
             <div class="form-group">
 
                 <label for="password">Password</label>
