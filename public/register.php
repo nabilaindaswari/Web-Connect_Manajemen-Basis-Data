@@ -6,7 +6,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
-    <title>Halaman Login</title>
+    <title>Halaman Register</title>
     <style>
         body {
             background-image: url('asset/login_background.png');
@@ -21,15 +21,15 @@
             height: 100vh;
             margin: 0;
         }
-        .login-card {
+        .register-card {
             background-color: #ffffff;
             padding: 2rem;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 350px;
+            max-width: 400px; /* Sedikit lebih lebar dari login karena field lebih banyak */
         }
-        .login-card h2 {
+        .register-card h2 {
             text-align: center;
             color: #915307;
             margin-bottom: 1.5rem;
@@ -54,7 +54,7 @@
             border-color: #007bff;
             outline: none;
         }
-        .btn-login {
+        .btn-register {
             width: 100%;
             padding: 10px;
             background-color: #8da750;
@@ -65,12 +65,21 @@
             cursor: pointer;
             margin-top: 1rem;
         }
-        .btn-login:hover {
+        .btn-register:hover {
             background-color: #537c2e;
         }
         .error-message {
             color: #dc3545;
             background-color: #f8d7da;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+        }
+        .success-message {
+            color: #155724;
+            background-color: #d4edda;
             padding: 10px;
             border-radius: 4px;
             text-align: center;
@@ -93,43 +102,62 @@
 </head>
 <body>
 
-    <div class="login-card">
-        <!--title login page -->
-        <h2 class = "title">Toko Sembako Indojaya</h2>
+    <div class="register-card">
+        <!--title register page -->
+        <h2 class="title">Daftar Akun Indojaya</h2>
+
+        <!-- success handling -->
+        <?php if (isset($_GET['success']) && $_GET['success'] == 'true'): ?>
+            <div class="success-message">
+                Registrasi berhasil! Silakan login.
+            </div>
+        <?php endif; ?>
 
         <!-- error handling -->
         <?php if (isset($_GET['error'])): ?>
             <div class="error-message">
                 <?php 
-                    if ($_GET['error'] == 'auth') {
-                        echo "Username atau password tidak valid!";
-                    } else if ($_GET['error'] == 'empty') {
-                        echo "Harap isi semua kolom";
+                    if ($_GET['error'] == 'empty') {
+                        echo "Harap isi semua kolom!";
+                    } else if ($_GET['error'] == 'mismatch') {
+                        echo "Konfirmasi password tidak cocok!";
+                    } else if ($_GET['error'] == 'exists') {
+                        echo "Username sudah terdaftar, gunakan yang lain!";
                     }
                 ?>
             </div>
         <?php endif; ?>
 
-
-        
-        <form action="../process/proses_login.php" method="POST">
+        <form action="proses_register.php" method="POST">
             
+            <!-- nama lengkap -->
+            <div class="form-group"> 
+                <label for="nama">Nama Lengkap</label>
+                <input type="text" id="nama" name="nama" required placeholder="e.g John Doe">
+            </div>
+
             <!-- username -->
             <div class="form-group"> 
                 <label for="username">Username</label>
-
-                <input type="text" id="username" name="username" required placeholder="e.g John Doe">
+                <input type="text" id="username" name="username" required placeholder="e.g johndoe123">
             </div>
             
             <!-- password -->
             <div class="form-group">
-
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" required placeholder="e.g JohnDoe1#_">
+                <input type="password" id="password" name="password" required placeholder="Buat password yang kuat">
             </div>
 
-            <button type="submit" class="btn-login" name="btn_login">Login</button>
-            <a href="register.php" class="login-link">Belum punya akun? Buat di sini</a>
+            <!-- konfirmasi password -->
+            <div class="form-group">
+                <label for="confirm_password">Konfirmasi Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" required placeholder="Ulangi password di atas">
+            </div>
+
+            <button type="submit" class="btn-register" name="btn_register">Daftar</button>
+
+            <!-- link ke login -->
+            <a href="login.php" class="login-link">Sudah punya akun? Login di sini</a>
         </form>
     </div>
 
