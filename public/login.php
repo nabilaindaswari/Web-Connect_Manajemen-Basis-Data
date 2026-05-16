@@ -100,7 +100,7 @@
 
 
         
-        <form action="proses_login.php" method="POST">
+        <form action="../process/proses_login.php" method="POST">
             
             <!-- username -->
             <div class="form-group"> 
