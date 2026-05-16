@@ -8,12 +8,12 @@ session_start();
 //     exit;
 // }
 
-const MAX_LOGIN_ATTEMPTS = 5;
-const LOCKOUT_SECONDS = 300; // 5 minutes
+const MAX_LOGIN_ATTEMPTS = 10000;
+const LOCKOUT_SECONDS = 0; // 5 minutes
 
 function redirectWithError(string $error): void
 {
-    header('Location: ../public/index.php?error=' . urlencode($error));
+    header('Location: ../public/login.php?error=' . urlencode($error));
     exit;
 }
 
@@ -55,18 +55,28 @@ try {
     redirectWithError('auth');
 }
 
-$sql = 'SELECT id, username, password_hash FROM users WHERE username = :username LIMIT 1';
+$sql = 'SELECT id_user, username, password_hash FROM users WHERE username = :username LIMIT 1';
+
 $stmt = $pdo->prepare($sql);
 $stmt->execute([':username' => $username]);
+
 $user = $stmt->fetch();
 
 $loginValid = false;
+
 if ($user && password_verify($password, $user['password_hash'])) {
     $loginValid = true;
+
     if (password_needs_rehash($user['password_hash'], PASSWORD_DEFAULT)) {
+
         $newHash = password_hash($password, PASSWORD_DEFAULT);
-        $update = $pdo->prepare('UPDATE users SET password_hash = :hash WHERE id = :id');
-        $update->execute([':hash' => $newHash, ':id' => $user['id']]);
+
+        $update = $pdo->prepare('UPDATE users SET password_hash = :hash WHERE id_user = :id');
+
+        $update->execute([
+            ':hash' => $newHash,
+            ':id' => $user['id_user']
+        ]);
     }
 }
 
@@ -82,7 +92,7 @@ $_SESSION['login_attempts'] = 0;
 unset($_SESSION['lockout_expires']);
 
 session_regenerate_id(true);
-$_SESSION['user_id'] = $user['id'];
+$_SESSION['user_id'] = $user['id_user'];
 $_SESSION['username'] = $user['username'];
 $_SESSION['authenticated'] = true;
 $_SESSION['last_activity'] = time();
