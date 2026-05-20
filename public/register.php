@@ -27,7 +27,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 400px; /* Sedikit lebih lebar dari login karena field lebih banyak */
+            max-width: 400px; 
         }
         .register-card h2 {
             text-align: center;

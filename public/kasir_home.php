@@ -1,15 +1,17 @@
 <?php
-
 session_start();
-
+// ;connect -> memulai session untuk menyimpan data keranjang/login
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <!-- ## bagian konfigurasi meta dan font -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kasir - Toko Sembako Indojaya</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- ## styling CSS untuk dashboard -->
     <style>
         :root {
             --font-main: 'Google Sans', 'Inter', sans-serif;
@@ -249,11 +251,11 @@ session_start();
             font-family: var(--font-main);
         }
 
-        /* Bottom Bar */
+       
         .bottom-bar {
             position: fixed;
             bottom: 0;
-            left: 250px; /* Offset by sidebar width */
+            left: 250px;
             width: calc(100% - 250px);
             background-color: var(--bottom-bar-bg);
             padding: 20px 40px;
@@ -290,8 +292,9 @@ session_start();
 </head>
 <body>
 
-    <!-- Sidebar -->
+    <!-- ## bagian navigasi sidebar menu -->
     <aside class="sidebar">
+        <!-- ;tombol -> hamburger-menu sidebar -->
         <div class="hamburger-menu">
             <div></div>
             <div></div>
@@ -300,55 +303,86 @@ session_start();
         
         <div class="sidebar-menu">
             <a href="#" class="sidebar-item">Semua(All)</a>
+            <!-- ;connect -> looping data $kategori_list untuk menampilkan menu kategori -->
             <?php foreach($kategori_list as $kat): ?>
                 <a href="#" class="sidebar-item"><?= htmlspecialchars($kat['nama_kategori']) ?></a>
             <?php endforeach; ?>
         </div>
     </aside>
 
-    <!-- Main Content -->
+    <!-- ## bagian utama konten dasboard kasir -->
     <main class="main-content">
-        <!-- Top Bar -->
+        
+        <!-- ## bagian atas konten (pencarian, urutan, & tombol aksi) -->
         <div class="top-bar">
             <div class="top-actions-left">
+                
+                <!-- ;tombol -> filter sort -->
                 <select class="select-sort">
                     <option>Urutkan Harga</option>
                     <option>Termurah</option>
                     <option>Termahal</option>
                 </select>
+                
+                <!-- ;tombol terapkan -> btn-terapkan  -->
                 <button class="btn-terapkan">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
                     </svg>
                     Terapkan
                 </button>
+                <!-- (Kasir tidak memiliki tombol Tambah Produk Baru) -->
             </div>
         </div>
 
         <div class="scroll-track"></div>
 
-        <!-- Product Grid -->
+        <!-- ## bagian grid daftar produk -->
         <div class="product-grid">
+            
+            <!-- ;connect -> $barang_list, query nya join antara kategori dan barang -->
             <?php foreach($barang_list as $index => $barang): ?>
+            
+            <!-- ;connect -> logic submit form langsung mengarah ke proses add_cart.php -->
             <form action="../process/add_cart.php" method="POST" style="margin:0;">
+                
+                <!-- ## bagian ini untuk perhitungan transaksi -->
+                <!-- ;connect -> ID Barang agar sistem tahu barang mana yang dibeli -->
                 <input type="hidden" name="id_barang" value="<?= htmlspecialchars($barang['id_barang']) ?>">
+                
+                <!-- ;connect -> ambil Harga Barang dari database untuk dihitung total transaksinya -->
                 <input type="hidden" name="harga" value="<?= htmlspecialchars($barang['harga']) ?>">
+                
+                <!-- ;connect -> MENETAPKAN JUMLAH PEMBELIAN DEFAULT -->
                 <input type="hidden" name="jumlah_barang" value="1">
 
+                <!-- ## ini untuk tampilan tiap card (Berupa Tombol Submit) -->
                 <button type="submit" class="product-card">
+                    
+                    <!-- ini untuk bagian atas card, atau bagian gambarnya -->
                     <div class="card-top">
-                                <!-- ;connect -> back end tolong dong di cek jumlah barang ini di dalam session keranjang, masukin dalam qty_dipesan -->
-                                <!-- ;connect -> logic penanda badge nomor dinamis, hanya muncul jika qty > 0 -->
-                                <?php if($qty_dipesan > 0): ?>
-                                    <div class="card-badge"><?= $qty_dipesan ?></div>
-                                <?php endif; ?>
-                                
-                        <img src="/menuPict/<?= htmlspecialchars($barang['pict']) ?>" style="width:100%; height:100%; object-fit:cover;">
+                        <!-- ;connect -> back end tolong dong di cek jumlah barang ini di dalam session keranjang, masukin dalam qty_dipesan -->
+                        <!-- ;connect -> logic penanda badge nomor dinamis, hanya muncul jika qty > 0 -->
+                        <?php if($qty_dipesan > 0): ?>
+                            <div class="card-badge"><?= $qty_dipesan ?></div>
+                        <?php endif; ?>
+                        
+                        <!-- ;connect -> ambil gambar dari database barang.pict yang terintegrasi path nya dengan /public/menuPict/ -->
+                        <img src="../public/menuPict/<?= htmlspecialchars($barang['pict']) ?>" style="width:100%; height:100%; object-fit:cover;">
                     </div>
+                    
+                    <!-- ## bagian bawah info di tiap card -->
                     <div class="card-bottom">
+                        <!-- ;connect -> ambil id_kategori, ditambahkan padding 0 di depan -->
                         <div class="card-kategori">Kategori : <?= str_pad($barang['id_kategori'], 2, '0', STR_PAD_LEFT) ?></div>
+                        
+                        <!-- ;connect -> ambil nama_barang dari barang.nama_barang-->
                         <div class="card-title"><?= htmlspecialchars($barang['nama_barang']) ?></div>
+                        
+                        <!-- ;connect -> ambil stok dari barang.stok-->
                         <div class="card-stok">Stok : <?= htmlspecialchars($barang['stok']) ?></div>
+                        
+                        <!-- ;connect -> ambil harga dari barang.harga lalu diformat ke rupiah -->
                         <div class="card-price">Rp. <?= number_format($barang['harga'], 0, ',', '.') ?></div>
                     </div>
                 </button>
@@ -357,14 +391,21 @@ session_start();
         </div>
     </main>
 
-    <!-- Bottom Bar -->
+    <!--## tampilan bar bawah, bar bawah isinya detail yang udah di pilih -->
     <div class="bottom-bar">
         <div class="bottom-info">
+            <!-- ;connect -> ambil dan tampilkan total nilai transaksi dari variable session/backend -->
             <span>Total Amount : Rp. <?= number_format($total_keranjang, 0, ',', '.') ?></span>
+            
+            <!-- ;connect -> ambil total jumlah item yang masuk keranjang -->
             <span>Total Barang : <?= $jumlah_item ?></span>
         </div>
+        
+        <!-- ;tombol lanjutkan checkout -> btn-lanjutkan -->
         <a href="checkout.php" class="btn-lanjutkan">Lanjutkan</a>
     </div>
 
 </body>
 </html>
+
+```

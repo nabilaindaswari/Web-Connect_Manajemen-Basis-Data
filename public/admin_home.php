@@ -556,7 +556,7 @@ session_start();
         </div>
     </div>
 
-    <!-- ## script js untuk logika dan interaksi modal (tambah/edit barang) -->
+    <!-- ## script js untuk logika dan interaksi modal (tambah/edit barang), nanti boleh di hapus dan dipindah ke backend -->
     <script>
         const modal = document.getElementById('itemModal');
         const modalTitle = document.getElementById('modalTitle');
