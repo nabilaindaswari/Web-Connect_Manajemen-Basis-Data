@@ -1,9 +1,6 @@
 <?php
-// PLACEHOLDER: Mulai session dan koneksi database di sini
+
 session_start();
-$stmtBarangList = $pdo->prepare("SELECT barang.id_barang, barang.nama_barang, kategori.nama_kategori, barang.harga, barang.stok, barang.pict FROM barang JOIN kategori ON barang.id_kategori = kategori.id_kategori;");
-$stmtBarangList->execute();
-require_once '../config/database.php';
 
 ?>
 <!DOCTYPE html>
@@ -11,7 +8,7 @@ require_once '../config/database.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Toko Sembako Indojaya</title>
+    <title>Kasir - Toko Sembako Indojaya</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -23,6 +20,8 @@ require_once '../config/database.php';
             --login-btn-bg: #715033;
             --card-top-bg: #E1CDBC;
             --card-bottom-bg: #9A9467;
+            --bottom-bar-bg: #989267;
+            --btn-lanjut-bg: #3F2921;
             --text-light: #ffffff;
             --text-dark: #333333;
             --border-radius-card: 12px;
@@ -49,6 +48,7 @@ require_once '../config/database.php';
             display: flex;
             flex-direction: column;
             color: var(--text-light);
+            z-index: 10;
         }
 
         .hamburger-menu {
@@ -91,6 +91,7 @@ require_once '../config/database.php';
         .main-content {
             flex: 1;
             padding: 30px 40px;
+            padding-bottom: 120px; /* Space for bottom bar */
             overflow-y: auto;
             position: relative;
         }
@@ -144,22 +145,12 @@ require_once '../config/database.php';
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .btn-login {
-            background-color: var(--login-btn-bg);
-            color: var(--text-light);
-            text-decoration: none;
-            padding: 10px 30px;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 500;
-        }
-
         /* Scrollbar track for visual detail */
         .scroll-track {
             position: absolute;
             right: 15px;
             top: 100px;
-            bottom: 40px;
+            bottom: 120px;
             width: 4px;
             background-color: #432E22;
         }
@@ -181,6 +172,16 @@ require_once '../config/database.php';
             height: 280px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             text-decoration: none;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: none;
+            text-align: left;
+            padding: 0;
+            width: 100%;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-4px);
         }
 
         .card-top {
@@ -194,16 +195,20 @@ require_once '../config/database.php';
             border-top-right-radius: var(--border-radius-card);
         }
 
-        /* Image icon placeholder */
-        .img-icon {
-            width: 30px;
-            height: 30px;
-            border: 2px solid #333;
-            border-radius: 4px;
-            position: relative;
+        .card-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #6B2D1D;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
         }
 
         .card-bottom {
@@ -214,6 +219,7 @@ require_once '../config/database.php';
             display: flex;
             flex-direction: column;
             justify-content: center;
+            width: 100%;
             border-bottom-left-radius: var(--border-radius-card);
             border-bottom-right-radius: var(--border-radius-card);
         }
@@ -221,22 +227,63 @@ require_once '../config/database.php';
         .card-kategori {
             font-size: 11px;
             margin-bottom: 2px;
+            font-family: var(--font-main);
         }
 
         .card-title {
             font-size: 16px;
             font-weight: 500;
             margin-bottom: 2px;
+            font-family: var(--font-main);
         }
 
         .card-stok {
             font-size: 11px;
             margin-bottom: 5px;
+            font-family: var(--font-main);
         }
 
         .card-price {
             font-size: 16px;
             font-weight: 500;
+            font-family: var(--font-main);
+        }
+
+        /* Bottom Bar */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 250px; /* Offset by sidebar width */
+            width: calc(100% - 250px);
+            background-color: var(--bottom-bar-bg);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .bottom-info {
+            display: flex;
+            gap: 50px;
+            font-size: 24px;
+            color: var(--text-light);
+            font-family: var(--font-main);
+        }
+
+        .btn-lanjutkan {
+            background-color: var(--btn-lanjut-bg);
+            color: var(--text-light);
+            text-decoration: none;
+            padding: 12px 35px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .btn-lanjutkan:hover {
+            opacity: 0.9;
         }
 
     </style>
@@ -270,37 +317,54 @@ require_once '../config/database.php';
                     <option>Termahal</option>
                 </select>
                 <button class="btn-terapkan">
-                    <!-- Filter SVG Icon Placeholder -->
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
                     </svg>
                     Terapkan
                 </button>
             </div>
-            
-            <a href="login.php" class="btn-login">Login</a>
         </div>
 
-        <!-- Scroll track line like in the image -->
         <div class="scroll-track"></div>
 
         <!-- Product Grid -->
         <div class="product-grid">
-            <?php foreach($barang_list as $barang): ?>
-            <div class="product-card">
-                <div class="card-top">
-                    <img src="../public/menuPict/<?= htmlspecialchars($barang['pict']) ?>" style="width:100%; height:100%; object-fit:cover;">
-                </div>
-                <div class="card-bottom">
-                    <div class="card-kategori">Kategori : <?= str_pad($barang['id_kategori'], 2, '0', STR_PAD_LEFT) ?></div>
-                    <div class="card-title"><?= htmlspecialchars($barang['nama_barang']) ?></div>
-                    <div class="card-stok">Stok : <?= htmlspecialchars($barang['stok']) ?></div>
-                    <div class="card-price">Rp. <?= number_format($barang['harga'], 0, ',', '.') ?></div>
-                </div>
-            </div>
+            <?php foreach($barang_list as $index => $barang): ?>
+            <form action="../process/add_cart.php" method="POST" style="margin:0;">
+                <input type="hidden" name="id_barang" value="<?= htmlspecialchars($barang['id_barang']) ?>">
+                <input type="hidden" name="harga" value="<?= htmlspecialchars($barang['harga']) ?>">
+                <input type="hidden" name="jumlah_barang" value="1">
+
+                <button type="submit" class="product-card">
+                    <div class="card-top">
+                                <!-- ;connect -> back end tolong dong di cek jumlah barang ini di dalam session keranjang, masukin dalam qty_dipesan -->
+                                <!-- ;connect -> logic penanda badge nomor dinamis, hanya muncul jika qty > 0 -->
+                                <?php if($qty_dipesan > 0): ?>
+                                    <div class="card-badge"><?= $qty_dipesan ?></div>
+                                <?php endif; ?>
+                                
+                        <img src="/menuPict/<?= htmlspecialchars($barang['pict']) ?>" style="width:100%; height:100%; object-fit:cover;">
+                    </div>
+                    <div class="card-bottom">
+                        <div class="card-kategori">Kategori : <?= str_pad($barang['id_kategori'], 2, '0', STR_PAD_LEFT) ?></div>
+                        <div class="card-title"><?= htmlspecialchars($barang['nama_barang']) ?></div>
+                        <div class="card-stok">Stok : <?= htmlspecialchars($barang['stok']) ?></div>
+                        <div class="card-price">Rp. <?= number_format($barang['harga'], 0, ',', '.') ?></div>
+                    </div>
+                </button>
+            </form>
             <?php endforeach; ?>
         </div>
     </main>
+
+    <!-- Bottom Bar -->
+    <div class="bottom-bar">
+        <div class="bottom-info">
+            <span>Total Amount : Rp. <?= number_format($total_keranjang, 0, ',', '.') ?></span>
+            <span>Total Barang : <?= $jumlah_item ?></span>
+        </div>
+        <a href="checkout.php" class="btn-lanjutkan">Lanjutkan</a>
+    </div>
 
 </body>
 </html>
