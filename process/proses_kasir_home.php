@@ -19,6 +19,13 @@ if ($sort === 'termurah') {
     $orderBy = 'ORDER BY barang.harga DESC';
 }
 
+$kategoriFilter = $_GET['kategori'] ?? '';
+
+if ($kategoriFilter !== '') {
+
+    $orderBy .= "WHERE barang.id_kategori = $kategoriFilter";
+}
+
 $stmtBarangList = $pdo->prepare("
     SELECT 
         barang.id_barang,
@@ -30,8 +37,9 @@ $stmtBarangList = $pdo->prepare("
         barang.pict
     FROM barang
     JOIN kategori 
-        ON barang.id_kategori = kategori.id_kategori $orderBy;
+        ON barang.id_kategori = kategori.id_kategori $orderBy ;
 ");
+
 
 $stmtBarangList->execute();
 
