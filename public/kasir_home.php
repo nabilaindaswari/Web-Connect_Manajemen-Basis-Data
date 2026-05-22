@@ -248,6 +248,8 @@ unset($barang);
             padding-right: 20px;
         }
 
+        .
+
         /* Product Card */
         .product-card {
             background-color: transparent;
@@ -295,6 +297,23 @@ unset($barang);
             font-size: 14px;
             font-weight: 600;
         }
+        .card-badge {
+            position: absolute;
+            top: 30px;
+            right: 10px;
+            background-color: #6B2D1D;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .tombol-
 
         .card-bottom {
             background-color: var(--card-bottom-bg);
@@ -449,6 +468,9 @@ unset($barang);
                         <?php if($barang['qty_dipesan'] > 0): ?>
                             <div class="card-badge"><?= $barang['qty_dipesan'] ?></div>
                         <?php endif; ?>
+                        <!-- ;tombol kurangi-->>
+                        <div class="btn-kurang"><?= -?></div>>
+                        
                         
                         <!-- ;connect -> ambil gambar dari database barang.pict yang terintegrasi path nya dengan /public/menuPict/ -->
                         <img src="../public/menuPict/<?= htmlspecialchars($barang['pict']) ?>" style="width:100%; height:100%; object-fit:cover;">
