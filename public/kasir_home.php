@@ -445,54 +445,43 @@ unset($barang);
             <!-- ;connect -> $barang_list, query nya join antara kategori dan barang -->
             <?php foreach($barang_list as $index => $barang): ?>
             
-            <!-- ;connect -> logic submit form langsung mengarah ke proses add_cart.php -->
+            <!-- ;connect -> $barang_list, query nya join antara kategori dan barang -->
+            <?php foreach($barang_list as $index => $barang): ?>
+
+            <!-- KEMBALIKAN TAG FORM SEBAGAI PEMBUNGKUS UTAMA -->
+            <!-- Aksi default form ini adalah ADD CART -->
             <form action="../process/add_cart.php" method="POST" style="margin:0;">
                 
                 <!-- ## bagian ini untuk perhitungan transaksi -->
-                <!-- ;connect -> ID Barang agar sistem tahu barang mana yang dibeli -->
                 <input type="hidden" name="id_barang" value="<?= htmlspecialchars($barang['id_barang']) ?>">
-                
-                <!-- ;connect -> ambil Harga Barang dari database untuk dihitung total transaksinya -->
                 <input type="hidden" name="harga" value="<?= htmlspecialchars($barang['harga']) ?>">
-                
-                <!-- ;connect -> MENETAPKAN JUMLAH PEMBELIAN DEFAULT -->
                 <input type="hidden" name="jumlah_barang" value="1">
 
-                <!-- ## ini untuk tampilan tiap card (Berupa Tombol Submit) -->
                 <div class="product-card">
                     
                     <!-- ini untuk bagian atas card, atau bagian gambarnya -->
                     <div class="card-top">
-                        <!-- ;connect -> back end tolong dong di cek jumlah barang ini di dalam session keranjang, masukin dalam qty_dipesan -->
-                        <!-- ;connect -> logic penanda badge nomor dinamis, hanya muncul jika qty > 0 -->
                         <?php if($barang['qty_dipesan'] > 0): ?>
                             <div class="card-badge"><?= $barang['qty_dipesan'] ?></div>
                             
-                            <!-- Gunakan formaction agar data form dikirim ke kurang_cart.php -->
+                            <!-- Tombol ini MEMBAJAK form untuk mengarah ke KURANG CART -->
                             <button type="submit" class="btn-kurang" formaction="../process/kurang_cart.php" title="Kurangi 1">
                                 -
                             </button>
                         <?php endif; ?>
                         
-                        
-                        <!-- ;connect -> ambil gambar dari database barang.pict yang terintegrasi path nya dengan /public/menuPict/ -->
                         <img src="../public/menuPict/<?= htmlspecialchars($barang['pict']) ?>" style="width:100%; height:100%; object-fit:cover;">
                     </div>
                     
                     <!-- ## bagian bawah info di tiap card -->
+                    <!-- Tombol ini akan mengeksekusi aksi default form (yaitu add_cart.php) -->
                     <button type="submit" class="card-bottom">
-                        <!-- ;connect -> ambil id_kategori, ditambahkan padding 0 di depan -->
                         <div class="card-kategori">Kategori : <?= str_pad($barang['id_kategori'], 2, '0', STR_PAD_LEFT) ?></div>
-                        
-                        <!-- ;connect -> ambil nama_barang dari barang.nama_barang-->
                         <div class="card-title"><?= htmlspecialchars($barang['nama_barang']) ?></div>
-                        
-                        <!-- ;connect -> ambil stok dari barang.stok-->
                         <div class="card-stok">Stok : <?= htmlspecialchars($barang['stok']) ?></div>
-                        
-                        <!-- ;connect -> ambil harga dari barang.harga lalu diformat ke rupiah -->
                         <div class="card-price">Rp. <?= number_format($barang['harga'], 0, ',', '.') ?></div>
                     </button>
+                    
                 </div>
             </form>
             <?php endforeach; ?>
