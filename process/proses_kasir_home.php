@@ -3,17 +3,21 @@
 require_once '../config/database.php';
 
 /* ======================================================
-   SESSION KERANJANG
-====================================================== */
-
-if (!isset($_SESSION['keranjang'])) {
-    $_SESSION['keranjang'] = [];
-}
-
-
-/* ======================================================
    AMBIL DATA BARANG + KATEGORI
 ====================================================== */
+
+$sort = $_GET['sort'] ?? '';
+
+$orderBy = '';
+
+if ($sort === 'termurah') {
+
+    $orderBy = 'ORDER BY barang.harga ASC';
+
+} elseif ($sort === 'termahal') {
+
+    $orderBy = 'ORDER BY barang.harga DESC';
+}
 
 $stmtBarangList = $pdo->prepare("
     SELECT 
@@ -26,7 +30,7 @@ $stmtBarangList = $pdo->prepare("
         barang.pict
     FROM barang
     JOIN kategori 
-        ON barang.id_kategori = kategori.id_kategori
+        ON barang.id_kategori = kategori.id_kategori $orderBy;
 ");
 
 $stmtBarangList->execute();
@@ -47,6 +51,13 @@ $stmtKategori->execute();
 
 $kategori_list = $stmtKategori->fetchAll(PDO::FETCH_ASSOC);
 
+/* ======================================================
+   SESSION KERANJANG
+====================================================== */
+
+if (!isset($_SESSION['keranjang'])) {
+    $_SESSION['keranjang'] = [];
+}
 
 /* ======================================================
    HITUNG TOTAL KERANJANG

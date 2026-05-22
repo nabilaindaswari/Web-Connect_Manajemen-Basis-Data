@@ -1,89 +1,7 @@
 <?php
-require_once '../config/database.php';
+require_once '../process/proses_kasir_home.php';
 session_start();
-/* ======================================================
-   SESSION KERANJANG
-====================================================== */
 
-if (!isset($_SESSION['keranjang'])) {
-    $_SESSION['keranjang'] = [];
-}
-
-
-/* ======================================================
-   AMBIL DATA BARANG + KATEGORI
-====================================================== */
-
-$stmtBarangList = $pdo->prepare("
-    SELECT 
-        barang.id_barang,
-        barang.nama_barang,
-        barang.id_kategori,
-        kategori.nama_kategori,
-        barang.harga,
-        barang.stok,
-        barang.pict
-    FROM barang
-    JOIN kategori 
-        ON barang.id_kategori = kategori.id_kategori
-");
-
-$stmtBarangList->execute();
-
-$barang_list = $stmtBarangList->fetchAll(PDO::FETCH_ASSOC);
-
-
-/* ======================================================
-   AMBIL DATA KATEGORI
-====================================================== */
-
-$stmtKategori = $pdo->prepare("
-    SELECT *
-    FROM kategori
-");
-
-$stmtKategori->execute();
-
-$kategori_list = $stmtKategori->fetchAll(PDO::FETCH_ASSOC);
-
-
-/* ======================================================
-   HITUNG TOTAL KERANJANG
-====================================================== */
-
-$total_keranjang = 0;
-$jumlah_item = 0;
-
-foreach ($_SESSION['keranjang'] as $item) {
-
-    $subtotal = $item['harga'] * $item['jumlah_barang'];
-
-    $total_keranjang += $subtotal;
-
-    $jumlah_item += $item['jumlah_barang'];
-}
-
-
-/* ======================================================
-   TAMBAHKAN qty_dipesan KE MASING-MASING BARANG
-====================================================== */
-
-foreach ($barang_list as &$barang) {
-
-    $qty_dipesan = 0;
-
-    foreach ($_SESSION['keranjang'] as $cart) {
-
-        if ($cart['id_barang'] == $barang['id_barang']) {
-
-            $qty_dipesan += $cart['jumlah_barang'];
-        }
-    }
-
-    $barang['qty_dipesan'] = $qty_dipesan;
-}
-
-unset($barang);
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -424,19 +342,37 @@ unset($barang);
             <div class="top-actions-left">
                 
                 <!-- ;tombol -> filter sort -->
-                <select class="select-sort">
-                    <option>Urutkan Harga</option>
-                    <option>Termurah</option>
-                    <option>Termahal</option>
+            <form method="GET" style="display:flex; gap:15px; align-items:center;">
+
+                <select name="sort" class="select-sort">
+
+                    <option value="">Urutkan Harga</option>
+
+                    <option value="termurah"
+                        <?= ($sort === 'termurah') ? 'selected' : '' ?>>
+                        Termurah
+                    </option>
+
+                    <option value="termahal"
+                        <?= ($sort === 'termahal') ? 'selected' : '' ?>>
+                        Termahal
+                    </option>
+
                 </select>
-                
-                <!-- ;tombol terapkan -> btn-terapkan  -->
-                <button class="btn-terapkan">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+
+                <button type="submit" class="btn-terapkan">
+                    <svg width="16" height="16" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round">
                         <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
                     </svg>
+
                     Terapkan
                 </button>
+
+            </form>
                 <!-- (Kasir tidak memiliki tombol Tambah Produk Baru) -->
             </div>
         </div>
