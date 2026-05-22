@@ -326,10 +326,15 @@ session_start();
         </div>
         
         <div class="sidebar-menu">
-            <a href="#" class="sidebar-item">Semua(All)</a>
+            <a href="?" class="sidebar-item <?= empty($_GET['kategori']) ? 'selected' : '' ?>">Semua (All)</a>
             <!-- ;connect -> looping data $kategori_list untuk menampilkan menu kategori -->
             <?php foreach($kategori_list as $kat): ?>
-                <a href="#" class="sidebar-item"><?= htmlspecialchars($kat['nama_kategori']) ?></a>
+                <!-- Memasukkan id_kategori ke dalam URL -->
+                <a href="?kategori=<?= $kat['id_kategori'] ?>" 
+                class="sidebar-item <?= (isset($_GET['kategori']) && $_GET['kategori'] == $kat['id_kategori']) ? 'selected' : '' ?>">
+                    <!-- Menampilkan nama kategori -->
+                    <?= htmlspecialchars($kat['nama_kategori']) ?>
+                </a>
             <?php endforeach; ?>
         </div>
     </aside>
