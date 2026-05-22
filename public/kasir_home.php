@@ -444,9 +444,6 @@ unset($barang);
             
             <!-- ;connect -> $barang_list, query nya join antara kategori dan barang -->
             <?php foreach($barang_list as $index => $barang): ?>
-            
-            <!-- ;connect -> $barang_list, query nya join antara kategori dan barang -->
-            <?php foreach($barang_list as $index => $barang): ?>
 
             <!-- KEMBALIKAN TAG FORM SEBAGAI PEMBUNGKUS UTAMA -->
             <!-- Aksi default form ini adalah ADD CART -->
