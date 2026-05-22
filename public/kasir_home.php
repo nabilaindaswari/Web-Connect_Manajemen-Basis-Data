@@ -299,7 +299,7 @@ unset($barang);
         }
         .btn-kurang {
             position: absolute;
-            top: 30px;
+            top: 40px;
             right: 10px;
             background-color: #6B2D1D;
             color: white;
@@ -466,10 +466,12 @@ unset($barang);
                         <!-- ;connect -> back end tolong dong di cek jumlah barang ini di dalam session keranjang, masukin dalam qty_dipesan -->
                         <!-- ;connect -> logic penanda badge nomor dinamis, hanya muncul jika qty > 0 -->
                         <?php if($barang['qty_dipesan'] > 0): ?>
+        
                             <div class="card-badge"><?= $barang['qty_dipesan'] ?></div>
+                            <!-- ;tombol kurangi-->>
+                            <div class="btn-kurang">-</div>>
+
                         <?php endif; ?>
-                        <!-- ;tombol kurangi-->>
-                        <div class="btn-kurang"><?= -?></div>>
                         
                         
                         <!-- ;connect -> ambil gambar dari database barang.pict yang terintegrasi path nya dengan /public/menuPict/ -->
