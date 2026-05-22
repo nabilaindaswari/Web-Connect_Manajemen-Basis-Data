@@ -469,7 +469,7 @@ unset($barang);
         
                             <div class="card-badge"><?= $barang['qty_dipesan'] ?></div>
                             <!-- ;tombol kurangi-->>
-                            <div class="btn-kurang">-</div>>
+                            <button type="submit" class="btn-kurang"> - </button>
 
                         <?php endif; ?>
                         
