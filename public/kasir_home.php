@@ -375,8 +375,8 @@ session_start();
                 <!-- ;connect -> MENETAPKAN JUMLAH PEMBELIAN DEFAULT -->
                 <input type="hidden" name="jumlah_barang" value="1">
 
-                <!-- ## ini untuk tampilan tiap card (Berupa Tombol Submit) -->
-                <button type="submit" class="product-card">
+                <!-- ## ini untuk tampilan tiap card -->
+                <div class="product-card">
                     
                     <!-- ini untuk bagian atas card, atau bagian gambarnya -->
                     <div class="card-top">
@@ -394,7 +394,7 @@ session_start();
                     </div>
                     
                     <!-- ## bagian bawah info di tiap card -->
-                    <div class="card-bottom">
+                    <button type="submit" class="card-bottom">
                         <!-- ;connect -> ambil id_kategori, ditambahkan padding 0 di depan -->
                         <div class="card-kategori">Kategori : <?= str_pad($barang['id_kategori'], 2, '0', STR_PAD_LEFT) ?></div>
                         
@@ -406,8 +406,8 @@ session_start();
                         
                         <!-- ;connect -> ambil harga dari barang.harga lalu diformat ke rupiah -->
                         <div class="card-price">Rp. <?= number_format($barang['harga'], 0, ',', '.') ?></div>
-                    </div>
-                </button>
+                    </button>
+                </div>
             </form>
             <?php endforeach; ?>
         </div>
