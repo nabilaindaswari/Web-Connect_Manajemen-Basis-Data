@@ -1,6 +1,56 @@
 <?php
 session_start();
+require_once '../config/database.php';
 
+/* ======================================================
+   CEK SESSION KERANJANG
+====================================================== */
+
+if (!isset($_SESSION['keranjang'])) {
+    $_SESSION['keranjang'] = [];
+}
+
+
+/* ======================================================
+   VARIABLE CHECKOUT
+====================================================== */
+
+$cart_list = [];
+$total_harga = 0;
+
+
+/* ======================================================
+   AMBIL DATA KERANJANG
+====================================================== */
+
+foreach ($_SESSION['keranjang'] as $item) {
+
+    $subtotal = $item['harga'] * $item['jumlah_barang'];
+
+    $cart_list[] = [
+        'id_barang'     => $item['id_barang'],
+        'nama_barang'   => $item['nama_barang'],
+        'harga'         => $item['harga'],
+        'jumlah_barang' => $item['jumlah_barang'],
+        'subtotal'      => $subtotal
+    ];
+
+    $total_harga += $subtotal;
+}
+
+
+/* ======================================================
+   AMBIL METODE PEMBAYARAN
+====================================================== */
+
+$stmtMetode = $pdo->prepare("
+    SELECT *
+    FROM metode_pembayaran
+");
+
+$stmtMetode->execute();
+
+$metode_list = $stmtMetode->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="id">
