@@ -1,6 +1,6 @@
 <?php
-require_once '../process/proses_kasir_home.php';
 session_start();
+require_once '../process/proses_kasir_home.php';
 
 ?>
 <!DOCTYPE html>

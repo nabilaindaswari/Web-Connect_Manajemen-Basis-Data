@@ -3,6 +3,14 @@
 require_once '../config/database.php';
 
 /* ======================================================
+   SESSION KERANJANG
+====================================================== */
+
+if (!isset($_SESSION['keranjang'])) {
+    $_SESSION['keranjang'] = [];
+}
+
+/* ======================================================
    AMBIL DATA BARANG + KATEGORI
 ====================================================== */
 
@@ -58,14 +66,6 @@ $stmtKategori = $pdo->prepare("
 $stmtKategori->execute();
 
 $kategori_list = $stmtKategori->fetchAll(PDO::FETCH_ASSOC);
-
-/* ======================================================
-   SESSION KERANJANG
-====================================================== */
-
-if (!isset($_SESSION['keranjang'])) {
-    $_SESSION['keranjang'] = [];
-}
 
 /* ======================================================
    HITUNG TOTAL KERANJANG
