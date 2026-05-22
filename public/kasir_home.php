@@ -459,7 +459,7 @@ unset($barang);
                 <input type="hidden" name="jumlah_barang" value="1">
 
                 <!-- ## ini untuk tampilan tiap card (Berupa Tombol Submit) -->
-                <button type="submit" class="product-card">
+                <div class="product-card">
                     
                     <!-- ini untuk bagian atas card, atau bagian gambarnya -->
                     <div class="card-top">
