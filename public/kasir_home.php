@@ -214,7 +214,7 @@ session_start();
             font-size: 14px;
             font-weight: 600;
         }
-        .card-badge {
+        .btn-kurang {
             position: absolute;
             top: 30px;
             right: 10px;
