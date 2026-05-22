@@ -313,9 +313,8 @@ unset($barang);
             font-weight: 600;
         }
 
-        .tombol-
 
-        .card-bottom {
+    .card-bottom {
             background-color: var(--card-bottom-bg);
             flex: 1;
             padding: 15px;
@@ -326,8 +325,13 @@ unset($barang);
             width: 100%;
             border-bottom-left-radius: var(--border-radius-card);
             border-bottom-right-radius: var(--border-radius-card);
+            
+            /* -- TAMBAHAN RESET BUTTON -- */
+            border: none;          /* Menghilangkan garis pinggir bawaan tombol */
+            text-align: left;      /* Memastikan teks rata kiri */
+            cursor: pointer;       /* Mengubah kursor jadi tangan saat di-hover */
+            font-family: inherit;  /* Menyesuaikan font dengan tema website */
         }
-
         .card-kategori {
             font-size: 11px;
             margin-bottom: 2px;
