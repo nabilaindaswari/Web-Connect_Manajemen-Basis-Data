@@ -97,5 +97,5 @@ $_SESSION['username'] = $user['username'];
 $_SESSION['authenticated'] = true;
 $_SESSION['last_activity'] = time();
 
-header('Location: ../public/home.php');
+header('Location: ../public/kasir_home.php');
 exit;

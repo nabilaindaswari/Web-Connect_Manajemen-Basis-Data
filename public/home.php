@@ -1,10 +1,8 @@
 <?php
-// PLACEHOLDER: Mulai session dan koneksi database di sini
 session_start();
-$stmtBarangList = $pdo->prepare("SELECT barang.id_barang, barang.nama_barang, kategori.nama_kategori, barang.harga, barang.stok, barang.pict FROM barang JOIN kategori ON barang.id_kategori = kategori.id_kategori;");
-$stmtBarangList->execute();
-require_once '../config/database.php';
 
+/* Panggil Backend */
+require_once '../process/proses_home.php';
 ?>
 <!DOCTYPE html>
 <html lang="id">

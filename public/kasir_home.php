@@ -1,6 +1,89 @@
 <?php
+require_once '../config/database.php';
 session_start();
-// ;connect -> memulai session untuk menyimpan data keranjang/login
+/* ======================================================
+   SESSION KERANJANG
+====================================================== */
+
+if (!isset($_SESSION['keranjang'])) {
+    $_SESSION['keranjang'] = [];
+}
+
+
+/* ======================================================
+   AMBIL DATA BARANG + KATEGORI
+====================================================== */
+
+$stmtBarangList = $pdo->prepare("
+    SELECT 
+        barang.id_barang,
+        barang.nama_barang,
+        barang.id_kategori,
+        kategori.nama_kategori,
+        barang.harga,
+        barang.stok,
+        barang.pict
+    FROM barang
+    JOIN kategori 
+        ON barang.id_kategori = kategori.id_kategori
+");
+
+$stmtBarangList->execute();
+
+$barang_list = $stmtBarangList->fetchAll(PDO::FETCH_ASSOC);
+
+
+/* ======================================================
+   AMBIL DATA KATEGORI
+====================================================== */
+
+$stmtKategori = $pdo->prepare("
+    SELECT *
+    FROM kategori
+");
+
+$stmtKategori->execute();
+
+$kategori_list = $stmtKategori->fetchAll(PDO::FETCH_ASSOC);
+
+
+/* ======================================================
+   HITUNG TOTAL KERANJANG
+====================================================== */
+
+$total_keranjang = 0;
+$jumlah_item = 0;
+
+foreach ($_SESSION['keranjang'] as $item) {
+
+    $subtotal = $item['harga'] * $item['jumlah_barang'];
+
+    $total_keranjang += $subtotal;
+
+    $jumlah_item += $item['jumlah_barang'];
+}
+
+
+/* ======================================================
+   TAMBAHKAN qty_dipesan KE MASING-MASING BARANG
+====================================================== */
+
+foreach ($barang_list as &$barang) {
+
+    $qty_dipesan = 0;
+
+    foreach ($_SESSION['keranjang'] as $cart) {
+
+        if ($cart['id_barang'] == $barang['id_barang']) {
+
+            $qty_dipesan += $cart['jumlah_barang'];
+        }
+    }
+
+    $barang['qty_dipesan'] = $qty_dipesan;
+}
+
+unset($barang);
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -216,7 +299,7 @@ session_start();
         }
         .btn-kurang {
             position: absolute;
-            top: 30px;
+            top: 40px;
             right: 10px;
             background-color: #6B2D1D;
             color: white;
@@ -375,18 +458,20 @@ session_start();
                 <!-- ;connect -> MENETAPKAN JUMLAH PEMBELIAN DEFAULT -->
                 <input type="hidden" name="jumlah_barang" value="1">
 
-                <!-- ## ini untuk tampilan tiap card -->
-                <div class="product-card">
+                <!-- ## ini untuk tampilan tiap card (Berupa Tombol Submit) -->
+                <button type="submit" class="product-card">
                     
                     <!-- ini untuk bagian atas card, atau bagian gambarnya -->
                     <div class="card-top">
                         <!-- ;connect -> back end tolong dong di cek jumlah barang ini di dalam session keranjang, masukin dalam qty_dipesan -->
                         <!-- ;connect -> logic penanda badge nomor dinamis, hanya muncul jika qty > 0 -->
-                        <?php if($qty_dipesan > 0): ?>
-                            <div class="card-badge"><?= $qty_dipesan ?></div>
+                        <?php if($barang['qty_dipesan'] > 0): ?>
+        
+                            <div class="card-badge"><?= $barang['qty_dipesan'] ?></div>
+                            <!-- ;tombol kurangi-->>
+                            <div class="btn-kurang">-</div>>
+
                         <?php endif; ?>
-                        <!-- ;tombol kurangi-->>
-                        <div class="btn-kurang"><?= -?></div>>
                         
                         
                         <!-- ;connect -> ambil gambar dari database barang.pict yang terintegrasi path nya dengan /public/menuPict/ -->
