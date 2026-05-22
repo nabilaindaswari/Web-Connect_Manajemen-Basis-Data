@@ -466,13 +466,12 @@ unset($barang);
                         <!-- ;connect -> back end tolong dong di cek jumlah barang ini di dalam session keranjang, masukin dalam qty_dipesan -->
                         <!-- ;connect -> logic penanda badge nomor dinamis, hanya muncul jika qty > 0 -->
                         <?php if($barang['qty_dipesan'] > 0): ?>
-        
                             <div class="card-badge"><?= $barang['qty_dipesan'] ?></div>
-                            <!-- ;tombol kurangi-->>
-                            <button type="submit" class="btn-kurang"> -
-                                <form action="../process/kurang_cart.php" method="POST" style="margin:0;">
+                            
+                            <!-- Gunakan formaction agar data form dikirim ke kurang_cart.php -->
+                            <button type="submit" class="btn-kurang" formaction="../process/kurang_cart.php" title="Kurangi 1">
+                                -
                             </button>
-
                         <?php endif; ?>
                         
                         
