@@ -348,7 +348,10 @@ require_once '../process/proses_kasir_home.php';
                 
                 <!-- ;tombol -> filter sort -->
             <form method="GET" style="display:flex; gap:15px; align-items:center;">
-
+                <input type="hidden" 
+                    name="kategori" 
+                    value="<?= htmlspecialchars($_GET['kategori'] ?? '') ?>">
+                    
                 <select name="sort" class="select-sort">
 
                     <option value="">Urutkan Harga</option>
