@@ -12,6 +12,17 @@ if (!isset($_SESSION['keranjang'])) {
 
 
 /* ======================================================
+   TENTUKAN HALAMAN REDIRECT (KASIR / ADMIN)
+====================================================== */
+
+$redirect_page = '../public/kasir_home.php';
+
+if (isset($_SESSION['access_level']) && $_SESSION['access_level'] >= 11) {
+    $redirect_page = '../public/admin_home.php';
+}
+
+
+/* ======================================================
    AMBIL ID BARANG
 ====================================================== */
 
@@ -44,9 +55,9 @@ if ($id_barang !== null) {
 
 
 /* ======================================================
-   KEMBALI KE HALAMAN KASIR
+   KEMBALI KE HALAMAN ASAL
 ====================================================== */
 
-header("Location: ../public/kasir_home.php");
+header("Location: $redirect_page");
 exit;
 ?>
