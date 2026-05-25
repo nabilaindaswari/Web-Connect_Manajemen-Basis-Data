@@ -14,6 +14,12 @@ if (!isset($_SESSION['keranjang'])) {
    AMBIL DATA BARANG + KATEGORI
 ====================================================== */
 
+/*
+|--------------------------------------------------------------------------
+| FILTER SORT
+|--------------------------------------------------------------------------
+*/
+
 $sort = $_GET['sort'] ?? '';
 
 $orderBy = '';
@@ -27,14 +33,34 @@ if ($sort === 'termurah') {
     $orderBy = 'ORDER BY barang.harga DESC';
 }
 
+
+/*
+|--------------------------------------------------------------------------
+| FILTER KATEGORI
+|--------------------------------------------------------------------------
+*/
+
 $kategoriFilter = $_GET['kategori'] ?? '';
+
+$where = '';
+
+$params = [];
 
 if ($kategoriFilter !== '') {
 
-    $orderBy .= "WHERE barang.id_kategori = $kategoriFilter";
+    $where = 'WHERE barang.id_kategori = ?';
+
+    $params[] = $kategoriFilter;
 }
 
-$stmtBarangList = $pdo->prepare("
+
+/*
+|--------------------------------------------------------------------------
+| QUERY FINAL
+|--------------------------------------------------------------------------
+*/
+
+$query = "
     SELECT 
         barang.id_barang,
         barang.nama_barang,
@@ -45,8 +71,14 @@ $stmtBarangList = $pdo->prepare("
         barang.pict
     FROM barang
     JOIN kategori 
-        ON barang.id_kategori = kategori.id_kategori $orderBy ;
-");
+        ON barang.id_kategori = kategori.id_kategori
+    $where
+    $orderBy
+";
+
+$stmtBarangList = $pdo->prepare($query);
+
+$stmtBarangList->execute($params);
 
 
 $stmtBarangList->execute();
