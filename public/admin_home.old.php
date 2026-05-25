@@ -1,5 +1,5 @@
 <?php
-session_start();
+# session_start();
 require_once '../process/proses_admin_home.php';
 // ;connect -> memulai session untuk menyimpan data keranjang/login
 ?>
