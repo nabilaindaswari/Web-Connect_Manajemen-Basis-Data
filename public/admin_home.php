@@ -1,17 +1,15 @@
 <?php
-session_start();
-// ;connect -> memulai session untuk menyimpan data keranjang/login
+# session_start();
+require_once '../process/proses_admin_home.php';
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <!-- ## bagian konfigurasi meta dan font -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Toko Sembako Indojaya</title>
+    <title>Admin - Toko Sembako Indojaya</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- ## styling CSS untuk dashboard -->
+
     <style>
         :root {
             --font-main: 'Google Sans', 'Inter', sans-serif;
@@ -19,20 +17,17 @@ session_start();
             --sidebar-bg: #432E22;
             --sidebar-border: rgba(255, 255, 255, 0.2);
             --top-btn-bg: #A19A6C;
-            --login-btn-bg: #715033;
             --card-top-bg: #E1CDBC;
             --card-bottom-bg: #9A9467;
+            --bottom-bar-bg: #989267;
+            --btn-lanjut-bg: #3F2921;
             --btn-edit-bg: #612B1F;
             --text-light: #ffffff;
             --text-dark: #333333;
             --border-radius-card: 12px;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: var(--font-main);
@@ -42,31 +37,24 @@ session_start();
             overflow: hidden;
         }
 
+        /* ── Sidebar ── */
         .sidebar {
             width: 250px;
             background-color: var(--sidebar-bg);
             display: flex;
             flex-direction: column;
             color: var(--text-light);
+            z-index: 10;
         }
 
-        .hamburger-menu {
-            padding: 20px 30px;
-            cursor: pointer;
-        }
-
+        .hamburger-menu { padding: 20px 30px; cursor: pointer; }
         .hamburger-menu div {
-            width: 30px;
-            height: 2px;
+            width: 30px; height: 2px;
             background-color: var(--text-light);
             margin-bottom: 6px;
         }
 
-        .sidebar-menu {
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-        }
+        .sidebar-menu { margin-top: 20px; display: flex; flex-direction: column; }
 
         .sidebar-item {
             padding: 15px 30px;
@@ -77,16 +65,11 @@ session_start();
             border-top: 1px solid transparent;
             transition: background 0.2s;
         }
-        
-        .sidebar-item:first-child {
-            border-top: 1px solid var(--sidebar-border);
-        }
+        .sidebar-item:first-child { border-top: 1px solid var(--sidebar-border); }
+        .sidebar-item:hover       { background-color: rgba(255,255,255,0.05); }
+        .sidebar-item.selected    { background-color: rgba(255,255,255,0.1); font-weight: 600; }
 
-        .sidebar-item:hover {
-            background-color: rgba(255, 255, 255, 0.05);
-        }
-
-        /* Main Content */
+        /* ── Main ── */
         .main-content {
             flex: 1;
             padding: 30px 40px;
@@ -102,11 +85,7 @@ session_start();
             margin-bottom: 40px;
         }
 
-        .top-actions-left {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
+        .top-actions-left { display: flex; gap: 15px; align-items: center; }
 
         .select-sort {
             background-color: #EFE4D3;
@@ -120,7 +99,6 @@ session_start();
             width: 180px;
             appearance: none;
             -webkit-appearance: none;
-            -moz-appearance: none;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 10px center;
@@ -141,17 +119,19 @@ session_start();
             align-items: center;
             gap: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-decoration: none;
         }
 
         .scroll-track {
             position: absolute;
             right: 15px;
             top: 100px;
-            bottom: 40px;
+            bottom: 120px;
             width: 4px;
             background-color: #432E22;
         }
 
+        /* ── Product Grid ── */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -166,14 +146,15 @@ session_start();
             flex-direction: column;
             height: 280px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            position: relative;
-            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: none;
+            text-align: left;
+            padding: 0;
+            width: 100%;
         }
-        
-        .product-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-        }
+        .product-card:hover { transform: translateY(-4px); }
 
         .card-top {
             background-color: var(--card-top-bg);
@@ -184,17 +165,7 @@ session_start();
             position: relative;
             border-top-left-radius: var(--border-radius-card);
             border-top-right-radius: var(--border-radius-card);
-        }
-
-        .img-icon {
-            width: 30px;
-            height: 30px;
-            border: 2px solid #333;
-            border-radius: 4px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            overflow: hidden;
         }
 
         .card-badge {
@@ -211,64 +182,70 @@ session_start();
             justify-content: center;
             font-size: 14px;
             font-weight: 600;
+            z-index: 2;
+        }
+
+        .btn-kurang {
+            position: absolute;
+            top: 44px;
+            right: 10px;
+            background-color: #6B2D1D;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            z-index: 2;
         }
 
         .card-bottom {
             background-color: var(--card-bottom-bg);
             flex: 1;
-            padding: 15px;
+            padding: 12px 15px 15px;
             color: var(--text-light);
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            position: relative;
+            justify-content: flex-start;
+            width: 100%;
             border-bottom-left-radius: var(--border-radius-card);
             border-bottom-right-radius: var(--border-radius-card);
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            font-family: inherit;
         }
 
         .btn-edit-card {
             align-self: flex-start;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             background-color: var(--btn-edit-bg);
             color: white;
             border: none;
-            padding: 4px 16px;
+            padding: 3px 14px;
             border-radius: 20px;
             font-size: 11px;
             cursor: pointer;
             box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-            position: relative;
-            z-index: 10;
         }
 
-        .card-kategori {
-            font-size: 11px;
-            margin-bottom: 2px;
-            margin-top: 5px;
-        }
+        .card-kategori { font-size: 11px; margin-bottom: 2px; font-family: var(--font-main); }
+        .card-title    { font-size: 16px; font-weight: 500; margin-bottom: 2px; font-family: var(--font-main); }
+        .card-stok     { font-size: 11px; margin-bottom: 5px; font-family: var(--font-main); }
+        .card-price    { font-size: 16px; font-weight: 500; font-family: var(--font-main); }
 
-        .card-title {
-            font-size: 16px;
-            font-weight: 500;
-            margin-bottom: 2px;
-        }
-
-        .card-stok {
-            font-size: 11px;
-            margin-bottom: 5px;
-        }
-
-        .card-price {
-            font-size: 16px;
-            font-weight: 500;
-        }
-
+        /* ── Bottom Bar ── */
         .bottom-bar {
             position: fixed;
             bottom: 0;
-            left: 250px; 
+            left: 250px;
             width: calc(100% - 250px);
-            background-color: #989267;
+            background-color: var(--bottom-bar-bg);
             padding: 20px 40px;
             display: flex;
             justify-content: space-between;
@@ -285,7 +262,7 @@ session_start();
         }
 
         .btn-lanjutkan {
-            background-color: #3F2921;
+            background-color: var(--btn-lanjut-bg);
             color: var(--text-light);
             text-decoration: none;
             padding: 12px 35px;
@@ -294,30 +271,24 @@ session_start();
             font-weight: 500;
             transition: opacity 0.3s;
         }
+        .btn-lanjutkan:hover { opacity: 0.9; }
 
-        .btn-lanjutkan:hover {
-            opacity: 0.9;
-        }
-
+        /* ── Modal ── */
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 100;
+            z-index: 200;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.3s ease;
         }
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+
         .modal-box {
             background-color: var(--bg-body);
             border-radius: 12px;
@@ -326,32 +297,38 @@ session_start();
             max-width: 450px;
             position: relative;
         }
+
         .modal-close {
             position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 20px;
+            top: 15px; right: 15px;
+            font-size: 22px;
             cursor: pointer;
             border: none;
             background: none;
             color: var(--sidebar-bg);
+            line-height: 1;
         }
+
         .form-group {
             margin-bottom: 15px;
             display: flex;
             flex-direction: column;
         }
+
+        .form-group label { font-size: 13px; margin-bottom: 5px; color: #555; font-weight: 500; }
+
         .form-control {
             padding: 10px;
             border: 1px solid var(--top-btn-bg);
             border-radius: 8px;
             background-color: #EFE4D3;
+            font-family: var(--font-main);
+            font-size: 14px;
         }
-        
+
         select.form-control {
             appearance: none;
             -webkit-appearance: none;
-            -moz-appearance: none;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 10px center;
@@ -359,6 +336,7 @@ session_start();
             padding-right: 35px;
             cursor: pointer;
         }
+
         .btn-submit {
             width: 100%;
             background-color: var(--sidebar-bg);
@@ -369,56 +347,59 @@ session_start();
             font-weight: 600;
             cursor: pointer;
             margin-top: 10px;
+            font-family: var(--font-main);
         }
-
+        .btn-submit:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
 
-    <!-- ## bagian navigasi sidebar menu -->
+    <!-- ## Sidebar Navigasi -->
     <aside class="sidebar">
-        <!-- ;tombol -> hamburger-menu sidebar -->
         <div class="hamburger-menu">
-            <div></div>
-            <div></div>
-            <div></div>
+            <div></div><div></div><div></div>
         </div>
-        
         <div class="sidebar-menu">
-            <a href="#" class="sidebar-item">Semua(All)</a>
-            <!-- ;connect -> looping data $kategori_list untuk menampilkan menu kategori -->
+            <a href="?" class="sidebar-item <?= empty($_GET['kategori']) ? 'selected' : '' ?>">Semua (All)</a>
             <?php foreach($kategori_list as $kat): ?>
-                <a href="#" class="sidebar-item"><?= htmlspecialchars($kat['nama_kategori']) ?></a>
+                <a href="?kategori=<?= $kat['id_kategori'] ?>"
+                   class="sidebar-item <?= (isset($_GET['kategori']) && $_GET['kategori'] == $kat['id_kategori']) ? 'selected' : '' ?>">
+                    <?= htmlspecialchars($kat['nama_kategori']) ?>
+                </a>
             <?php endforeach; ?>
         </div>
     </aside>
 
-    <!-- ## bagian utama konten dasboard admin -->
+    <!-- ## Konten Utama -->
     <main class="main-content">
-        
-        <!-- ## bagian atas konten (pencarian, urutan, & tombol aksi) -->
+
+        <!-- ## Top Bar -->
         <div class="top-bar">
             <div class="top-actions-left">
 
-            <!-- ;tombol -> filter sort -->
-                <select class="select-sort">
-                    <option>Urutkan Harga</option>
-                    <option>Termurah</option>
-                    <option>Termahal</option>
-                </select>
-            
-            <!-- ;tombol terapkan -> btn-terapkan  -->
-                <button class="btn-terapkan">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-                    </svg>
-                    Terapkan
-                </button>
+                <!-- Filter Sort (dengan form GET, pertahankan kategori aktif) -->
+                <form method="GET" style="display:flex; gap:15px; align-items:center;">
+                    <input type="hidden" name="kategori" value="<?= htmlspecialchars($_GET['kategori'] ?? '') ?>">
 
-            <!-- ;tombol add -> btnOpenAdd (memicu modal form) -->
+                    <select name="sort" class="select-sort">
+                        <option value="">Urutkan Harga</option>
+                        <option value="termurah" <?= ($sort === 'termurah') ? 'selected' : '' ?>>Termurah</option>
+                        <option value="termahal" <?= ($sort === 'termahal') ? 'selected' : '' ?>>Termahal</option>
+                    </select>
+
+                    <button type="submit" class="btn-terapkan">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                        </svg>
+                        Terapkan
+                    </button>
+                </form>
+
+                <!-- Tombol Tambah Produk Baru -->
                 <button class="btn-tambah" id="btnOpenAdd">
-                    <!-- Plus Icon -->
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10"></circle>
                         <line x1="12" y1="8" x2="12" y2="16"></line>
                         <line x1="8" y1="12" x2="16" y2="12"></line>
@@ -430,169 +411,182 @@ session_start();
 
         <div class="scroll-track"></div>
 
-        <!-- ## bagian grid daftar produk -->
+        <!-- ## Grid Produk -->
         <div class="product-grid">
-            
-        <!-- ;connect -> $barang_list, query nya join antara kategori dan barang -->
-            <?php foreach($barang_list as $index => $barang): ?>
-            <div class="product-card">
-                
-                <!-- ;connect -> logic submit form langsung mengarah ke proses add_cart.php -->
-                <form action="../process/add_cart.php" method="POST" style="height: 100%; display: flex; flex-direction: column; cursor: pointer; margin: 0;" onclick="this.submit()">
-                    
-                    <!-- ## bagian ini untuk perhitungan transaksi-->
-                            <!-- ;connect -> ID Barang agar sistem tahu barang mana yang dibeli -->
-                            <input type="hidden" name="id_barang" value="<?= htmlspecialchars($barang['id_barang']) ?>">
 
-                            <!-- ;connect -> ambil Harga Barang dari database untuk dihitung total transaksinya -->
-                            <input type="hidden" name="harga" value="<?= htmlspecialchars($barang['harga']) ?>">
+            <?php foreach($barang_list as $barang): ?>
 
-                            <!-- ;connect -> MENETAPKAN JUMLAH PEMBELIAN DEFAULT -->
-                            <input type="hidden" name="jumlah_barang" value="1">
+            <!-- Form pembungkus: aksi default = add_cart -->
+            <form action="../process/add_cart.php" method="POST" style="margin:0;">
+                <input type="hidden" name="id_barang" value="<?= htmlspecialchars($barang['id_barang']) ?>">
+                <input type="hidden" name="harga"     value="<?= htmlspecialchars($barang['harga']) ?>">
+                <input type="hidden" name="jumlah_barang" value="1">
 
-                    <!-- ## ini untuk tampilan tiap card-->
-                            <!-- ini untuk bagian atas card, atau bagian gambarnya -->
-                            
-                            <<div class="card-top">
-                                <!-- ;connect -> back end tolong dong di cek jumlah barang ini di dalam session keranjang, masukin dalam qty_dipesan -->
-                                <!-- ;connect -> logic penanda badge nomor dinamis, hanya muncul jika qty > 0 -->
-                                <?php if($qty_dipesan > 0): ?>
-                                    <div class="card-badge"><?= $qty_dipesan ?></div>
-                                <?php endif; ?>
-                                
-                                <!-- ;connect -> ambil gambar dari database barang.pict yang terintegrasi path nya dengan /public/menuPict/ -->
-                                <img src="../public/menuPict/<?= htmlspecialchars($barang['pict']) ?>" style="width:100%; height:100%; object-fit:cover;">
-                            </div>
-                            
-                            <!-- ## bagian bawah info di tiap card -->
-                            <div class="card-bottom">
-                    <!-- ## tombol edit di card tiap barang-->
-                    <!-- ;tombol edit -> btn-edit-card memicu modal terbuka dengan membawa parameter id_barang -->
-                            <button type="button" class="btn-edit-card" onclick="openEditModal(event, <?= $barang['id_barang'] ?>)">edit</button>
-                                
-                                <!-- ;connect -> ambil id_kategori, ditambahkan padding 0 di depan -->
-                                <div class="card-kategori">Kategori : <?= str_pad($barang['id_kategori'], 2, '0', STR_PAD_LEFT) ?></div>
-                                
-                                <!-- ;connect -> ambil nama_barang dari barang.nama_barang-->
-                                <div class="card-title"><?= htmlspecialchars($barang['nama_barang']) ?></div>
+                <div class="product-card">
 
-                                <!-- ;connect -> ambil stok dari barang.stok-->
-                                <div class="card-stok">Stok : <?= htmlspecialchars($barang['stok']) ?></div>
+                    <!-- Bagian atas: Gambar -->
+                    <div class="card-top">
+                        <?php if($barang['qty_dipesan'] > 0): ?>
+                            <div class="card-badge"><?= $barang['qty_dipesan'] ?></div>
+                            <!-- Tombol kurang membajak form ke kurang_cart.php -->
+                            <button type="submit" class="btn-kurang"
+                                    formaction="../process/kurang_cart.php"
+                                    title="Kurangi 1">−</button>
+                        <?php endif; ?>
+                        <img src="../public/menuPict/<?= htmlspecialchars($barang['pict']) ?>"
+                             style="width:100%; height:100%; object-fit:cover;"
+                             alt="<?= htmlspecialchars($barang['nama_barang']) ?>">
+                    </div>
 
-                                <!-- ;connect -> ambil harga dari barang.harga lalu diformat ke rupiah -->
-                                <div class="card-price">Rp. <?= number_format($barang['harga'], 0, ',', '.') ?></div>
-                            </div>
-                </form>
-            </div>
+                    <!-- Bagian bawah: Info + Tombol submit utama -->
+                    <button type="submit" class="card-bottom">
+
+                        <!-- Tombol Edit: stopPropagation mencegah form ter-submit -->
+                        <button type="button" class="btn-edit-card"
+                                onclick="openEditModal(event, <?= (int)$barang['id_barang'] ?>)">
+                            edit
+                        </button>
+
+                        <div class="card-kategori">Kategori : <?= str_pad($barang['id_kategori'], 2, '0', STR_PAD_LEFT) ?></div>
+                        <div class="card-title"><?= htmlspecialchars($barang['nama_barang']) ?></div>
+                        <div class="card-stok">Stok : <?= htmlspecialchars($barang['stok']) ?></div>
+                        <div class="card-price">Rp. <?= number_format($barang['harga'], 0, ',', '.') ?></div>
+                    </button>
+
+                </div>
+            </form>
+
             <?php endforeach; ?>
         </div>
     </main>
 
-    <!--## tampilan bar bawah, bar bawah isinya detail yang udah di pilih -->
+    <!-- ## Bottom Bar -->
     <div class="bottom-bar">
         <div class="bottom-info">
-            <!-- ;connect -> ambil dan tampilkan total nilai transaksi dari variable session/backend -->
             <span>Total Amount : Rp. <?= number_format($total_keranjang, 0, ',', '.') ?></span>
-            
-            <!-- ;connect -> ambil total jumlah item yang masuk keranjang -->
             <span>Total Barang : <?= $jumlah_item ?></span>
         </div>
-
-        <!-- ;tombol lanjutkan checkout -> btn-lanjutkan -->
         <a href="checkout.php" class="btn-lanjutkan">Lanjutkan</a>
     </div>
 
-    <!--## form edit atau tambah (Modal Box Pop up) -->
+
+    <!-- ## Modal Tambah / Edit Barang -->
     <div class="modal-overlay" id="itemModal">
         <div class="modal-box">
-            <!-- ;tombol -> close/tutup modal -->
             <button class="modal-close" id="btnCloseModal">&times;</button>
-            <h3 style="margin-bottom: 20px; color: var(--sidebar-bg);" id="modalTitle">Tambah Barang Baru</h3>
-            
-            <!-- ;connect -> action form diarahkan ke proses_barang.php untuk ditangkap dan masuk ke database -->
-            <form action="../process/proses_barang.php" method="POST" enctype="multipart/form-data">
-                
-                <!-- ;input -> hidden untuk menyimpan id barang saat mode edit berjalan -->
+            <h3 style="margin-bottom:20px; color:var(--sidebar-bg);" id="modalTitle">Tambah Barang Baru</h3>
+
+            <!-- Action mengarah ke proses_admin_home.php -->
+            <form action="../process/proses_admin_home.php" method="POST" enctype="multipart/form-data">
+
+                <!-- Field penanda aksi (wajib ada agar back-end tahu ini POST CRUD) -->
+                <input type="hidden" name="aksi_barang" value="1">
+
+                <!-- Hidden id_barang: kosong = tambah baru, berisi = edit -->
                 <input type="hidden" name="id_barang" id="form_id_barang" value="">
-                
+
                 <div class="form-group">
                     <label>Nama Barang</label>
-                    <!-- ;input -> data nama barang -->
                     <input type="text" name="nama_barang" id="form_nama_barang" class="form-control" required>
                 </div>
 
                 <div class="form-group">
                     <label>Kategori</label>
-                    <!-- ;input -> select data kategori -->
                     <select name="id_kategori" id="form_id_kategori" class="form-control" required>
-                        <!-- ;connect -> looping opsi list kategori dari database -->
                         <?php foreach($kategori_list as $kat): ?>
-                            <option value="<?= htmlspecialchars($kat['id_kategori']) ?>"><?= htmlspecialchars($kat['nama_kategori']) ?></option>
+                            <option value="<?= htmlspecialchars($kat['id_kategori']) ?>">
+                                <?= htmlspecialchars($kat['nama_kategori']) ?>
+                            </option>
                         <?php endforeach; ?>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label>Stok Awal</label>
-                    <!-- ;input -> data stok berbentuk angka -->
+                    <label>Stok</label>
                     <input type="number" name="stok" id="form_stok" class="form-control" required min="0">
                 </div>
 
                 <div class="form-group">
                     <label>Harga Satuan (Rp)</label>
-                    <!-- ;input -> data harga barang berbentuk angka -->
                     <input type="number" name="harga" id="form_harga" class="form-control" required min="0">
                 </div>
 
                 <div class="form-group">
-                    <label>Gambar Produk</label>
-                    <!-- ;input -> unggah file foto untuk masuk ke dalam direktori -->
+                    <label>Gambar Produk <span id="pict_hint" style="font-weight:400; color:#888;"></span></label>
                     <input type="file" name="pict" id="form_pict" class="form-control" accept="image/*">
                 </div>
 
-                <!-- ;tombol submit -> btn-submit (simpan ke database) -->
                 <button type="submit" class="btn-submit">Simpan</button>
             </form>
         </div>
     </div>
 
-    <!-- ## script js untuk logika dan interaksi modal (tambah/edit barang), nanti boleh di hapus dan dipindah ke backend -->
+
     <script>
-        const modal = document.getElementById('itemModal');
+        const modal      = document.getElementById('itemModal');
         const modalTitle = document.getElementById('modalTitle');
         const btnOpenAdd = document.getElementById('btnOpenAdd');
-        const btnClose = document.getElementById('btnCloseModal');
+        const btnClose   = document.getElementById('btnCloseModal');
 
-        // ;logic -> reset isi form jika tombol 'tambah barang baru' diklik
-        if(btnOpenAdd) {
-            btnOpenAdd.addEventListener('click', function() {
-                document.getElementById('form_id_barang').value = '';
-                modalTitle.textContent = "Tambah Barang Baru";
-                modal.classList.add('active');
-            });
-        }
-
-        // ;logic -> openEditModal untuk membuka modal khusus mode edit data barang
-        function openEditModal(event, id) {
-            event.stopPropagation(); // Mencegah form parent di card tersubmit secara tidak sengaja
-            document.getElementById('form_id_barang').value = id;
-            modalTitle.textContent = "Edit Barang";
-            // Logic to fetch details should go here
+        /* ── Buka Modal: Mode Tambah ── */
+        btnOpenAdd.addEventListener('click', function () {
+            resetForm();
+            modalTitle.textContent = 'Tambah Barang Baru';
+            document.getElementById('pict_hint').textContent = '';
             modal.classList.add('active');
+        });
+
+        /* ── Buka Modal: Mode Edit ── */
+        function openEditModal(event, id) {
+            event.stopPropagation(); // Cegah form card ter-submit
+
+            modalTitle.textContent = 'Edit Barang (memuat data...)';
+            modal.classList.add('active');
+
+            /* Ambil data barang via AJAX ke proses_admin_home.php */
+            fetch('../process/proses_admin_home.php?get_barang=' + id)
+                .then(res => res.json())
+                .then(data => {
+                    if (!data || !data.id_barang) {
+                        alert('Gagal memuat data barang.');
+                        modal.classList.remove('active');
+                        return;
+                    }
+                    document.getElementById('form_id_barang').value   = data.id_barang;
+                    document.getElementById('form_nama_barang').value  = data.nama_barang;
+                    document.getElementById('form_id_kategori').value  = data.id_kategori;
+                    document.getElementById('form_stok').value         = data.stok;
+                    document.getElementById('form_harga').value        = data.harga;
+                    document.getElementById('pict_hint').textContent   = '(kosongkan jika tidak ingin mengganti gambar)';
+                    modalTitle.textContent = 'Edit Barang';
+                })
+                .catch(() => {
+                    alert('Terjadi kesalahan saat mengambil data.');
+                    modal.classList.remove('active');
+                });
         }
 
-        // ;logic -> untuk menutup modal box 
-        btnClose.addEventListener('click', function(e) {
+        /* ── Tutup Modal ── */
+        btnClose.addEventListener('click', function (e) {
             e.preventDefault();
             modal.classList.remove('active');
         });
-        
-        // ;logic -> untuk menutup modal ketika user klik background di luar box
-        window.addEventListener('click', function(e) {
+
+        window.addEventListener('click', function (e) {
             if (e.target === modal) {
                 modal.classList.remove('active');
             }
         });
+
+        /* ── Reset Form ── */
+        function resetForm() {
+            document.getElementById('form_id_barang').value  = '';
+            document.getElementById('form_nama_barang').value = '';
+            document.getElementById('form_stok').value       = '';
+            document.getElementById('form_harga').value      = '';
+            document.getElementById('form_pict').value       = '';
+        }
     </script>
+
 </body>
 </html>
