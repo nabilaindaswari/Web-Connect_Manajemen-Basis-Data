@@ -105,6 +105,8 @@
                         echo "Username atau password tidak valid!";
                     } else if ($_GET['error'] == 'empty') {
                         echo "Harap isi semua kolom";
+                    } else if ($_GET['error'] == 'access') {
+                        echo "Harap melakukan login terlebih dahulu!";
                     }
                 ?>
             </div>
