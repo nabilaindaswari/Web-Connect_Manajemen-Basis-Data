@@ -9,7 +9,7 @@ session_start();
 // }
 
 const MAX_LOGIN_ATTEMPTS = 10000;
-const LOCKOUT_SECONDS = 0; // 5 minutes
+const LOCKOUT_SECONDS    = 0; // 5 minutes
 
 function redirectWithError(string $error): void
 {
@@ -29,23 +29,26 @@ if ($username === '' || $password === '') {
 }
 
 if (!isset($_SESSION['login_attempts'])) {
-    $_SESSION['login_attempts'] = 0;
-    $_SESSION['last_login_attempt'] = 0;
+    $_SESSION['login_attempts']      = 0;
+    $_SESSION['last_login_attempt']  = 0;
 }
 
-if ($_SESSION['login_attempts'] >= MAX_LOGIN_ATTEMPTS && time() - $_SESSION['last_login_attempt'] < LOCKOUT_SECONDS) {
+if (
+    $_SESSION['login_attempts'] >= MAX_LOGIN_ATTEMPTS &&
+    time() - $_SESSION['last_login_attempt'] < LOCKOUT_SECONDS
+) {
     redirectWithError('auth');
 }
 
 $_SESSION['last_login_attempt'] = time();
 
-$dsn = 'mysql:host=localhost;dbname=tokosembako;charset=utf8mb4';
-$dbUser = 'root';
-$dbPass = '';
+$dsn     = 'mysql:host=localhost;dbname=tokosembako;charset=utf8mb4';
+$dbUser  = 'root';
+$dbPass  = '';
 $options = [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES => false,
+    PDO::ATTR_EMULATE_PREPARES   => false,
 ];
 
 try {
@@ -55,11 +58,14 @@ try {
     redirectWithError('auth');
 }
 
-$sql = 'SELECT id_user, username, password_hash FROM users WHERE username = :username LIMIT 1';
 
+/* ======================================================
+   AMBIL DATA USER BESERTA ACCESS LEVEL
+====================================================== */
+
+$sql  = 'SELECT id_user, username, password_hash, access_level FROM users WHERE username = :username LIMIT 1';
 $stmt = $pdo->prepare($sql);
 $stmt->execute([':username' => $username]);
-
 $user = $stmt->fetch();
 
 $loginValid = false;
@@ -70,12 +76,10 @@ if ($user && password_verify($password, $user['password_hash'])) {
     if (password_needs_rehash($user['password_hash'], PASSWORD_DEFAULT)) {
 
         $newHash = password_hash($password, PASSWORD_DEFAULT);
-
-        $update = $pdo->prepare('UPDATE users SET password_hash = :hash WHERE id_user = :id');
-
+        $update  = $pdo->prepare('UPDATE users SET password_hash = :hash WHERE id_user = :id');
         $update->execute([
             ':hash' => $newHash,
-            ':id' => $user['id_user']
+            ':id'   => $user['id_user']
         ]);
     }
 }
@@ -88,14 +92,34 @@ if (!$loginValid) {
     redirectWithError('auth');
 }
 
+
+/* ======================================================
+   SET SESSION
+====================================================== */
+
 $_SESSION['login_attempts'] = 0;
 unset($_SESSION['lockout_expires']);
 
 session_regenerate_id(true);
-$_SESSION['user_id'] = $user['id_user'];
-$_SESSION['username'] = $user['username'];
+$_SESSION['user_id']       = $user['id_user'];
+$_SESSION['username']      = $user['username'];
+$_SESSION['access_level']  = (int)$user['access_level'];
 $_SESSION['authenticated'] = true;
 $_SESSION['last_activity'] = time();
 
-header('Location: ../public/kasir_home.php');
+
+/* ======================================================
+   REDIRECT BERDASARKAN ACCESS LEVEL
+   1–10  : Kasir
+   11–20 : Admin
+====================================================== */
+
+$accessLevel = $_SESSION['access_level'];
+
+if ($accessLevel >= 11 && $accessLevel <= 20) {
+    header('Location: ../public/admin_home.php');
+} else {
+    header('Location: ../public/kasir_home.php');
+}
+
 exit;
