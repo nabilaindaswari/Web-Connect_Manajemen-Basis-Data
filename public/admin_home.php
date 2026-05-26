@@ -17,6 +17,7 @@ require_once '../process/proses_admin_home.php';
             --sidebar-bg: #432E22;
             --sidebar-border: rgba(255, 255, 255, 0.2);
             --top-btn-bg: #A19A6C;
+            --login-btn-bg: #715033;
             --card-top-bg: #E1CDBC;
             --card-bottom-bg: #9A9467;
             --bottom-bar-bg: #989267;
@@ -27,7 +28,11 @@ require_once '../process/proses_admin_home.php';
             --border-radius-card: 12px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: var(--font-main);
@@ -37,7 +42,7 @@ require_once '../process/proses_admin_home.php';
             overflow: hidden;
         }
 
-        /* ── Sidebar ── */
+        /* Sidebar */
         .sidebar {
             width: 250px;
             background-color: var(--sidebar-bg);
@@ -47,14 +52,23 @@ require_once '../process/proses_admin_home.php';
             z-index: 10;
         }
 
-        .hamburger-menu { padding: 20px 30px; cursor: pointer; }
+        .hamburger-menu {
+            padding: 20px 30px;
+            cursor: pointer;
+        }
+
         .hamburger-menu div {
-            width: 30px; height: 2px;
+            width: 30px;
+            height: 2px;
             background-color: var(--text-light);
             margin-bottom: 6px;
         }
 
-        .sidebar-menu { margin-top: 20px; display: flex; flex-direction: column; }
+        .sidebar-menu {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+        }
 
         .sidebar-item {
             padding: 15px 30px;
@@ -65,19 +79,30 @@ require_once '../process/proses_admin_home.php';
             border-top: 1px solid transparent;
             transition: background 0.2s;
         }
-        .sidebar-item:first-child { border-top: 1px solid var(--sidebar-border); }
-        .sidebar-item:hover       { background-color: rgba(255,255,255,0.05); }
-        .sidebar-item.selected    { background-color: rgba(255,255,255,0.1); font-weight: 600; }
+        
+        .sidebar-item:first-child {
+            border-top: 1px solid var(--sidebar-border);
+        }
 
-        /* ── Main ── */
+        .sidebar-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-item.selected {
+            background-color: rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+        }
+
+        /* Main Content */
         .main-content {
             flex: 1;
             padding: 30px 40px;
-            padding-bottom: 120px;
+            padding-bottom: 120px; /* Space for bottom bar */
             overflow-y: auto;
             position: relative;
         }
 
+        /* Top Bar */
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -85,7 +110,11 @@ require_once '../process/proses_admin_home.php';
             margin-bottom: 40px;
         }
 
-        .top-actions-left { display: flex; gap: 15px; align-items: center; }
+        .top-actions-left {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
 
         .select-sort {
             background-color: #EFE4D3;
@@ -122,6 +151,7 @@ require_once '../process/proses_admin_home.php';
             text-decoration: none;
         }
 
+        /* Scrollbar track for visual detail */
         .scroll-track {
             position: absolute;
             right: 15px;
@@ -131,7 +161,7 @@ require_once '../process/proses_admin_home.php';
             background-color: #432E22;
         }
 
-        /* ── Product Grid ── */
+        /* Product Grid */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -139,6 +169,7 @@ require_once '../process/proses_admin_home.php';
             padding-right: 20px;
         }
 
+        /* Product Card */
         .product-card {
             background-color: transparent;
             border-radius: var(--border-radius-card);
@@ -147,14 +178,16 @@ require_once '../process/proses_admin_home.php';
             height: 280px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             text-decoration: none;
-            cursor: pointer;
             transition: transform 0.2s;
             border: none;
             text-align: left;
             padding: 0;
             width: 100%;
         }
-        .product-card:hover { transform: translateY(-4px); }
+        
+        .product-card:hover {
+            transform: translateY(-4px);
+        }
 
         .card-top {
             background-color: var(--card-top-bg);
@@ -204,21 +237,16 @@ require_once '../process/proses_admin_home.php';
             z-index: 2;
         }
 
-        .card-bottom {
+        /* Wrapper div untuk menghindari nested button HTML invalid */
+        .card-bottom-wrapper {
             background-color: var(--card-bottom-bg);
             flex: 1;
             padding: 12px 15px 15px;
-            color: var(--text-light);
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            width: 100%;
             border-bottom-left-radius: var(--border-radius-card);
             border-bottom-right-radius: var(--border-radius-card);
-            border: none;
-            text-align: left;
-            cursor: pointer;
-            font-family: inherit;
         }
 
         .btn-edit-card {
@@ -232,6 +260,20 @@ require_once '../process/proses_admin_home.php';
             font-size: 11px;
             cursor: pointer;
             box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            font-family: inherit;
+        }
+
+        .card-submit-area {
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            text-align: left;
+            cursor: pointer;
+            font-family: inherit;
+            padding: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         .card-kategori { font-size: 11px; margin-bottom: 2px; font-family: var(--font-main); }
@@ -239,7 +281,7 @@ require_once '../process/proses_admin_home.php';
         .card-stok     { font-size: 11px; margin-bottom: 5px; font-family: var(--font-main); }
         .card-price    { font-size: 16px; font-weight: 500; font-family: var(--font-main); }
 
-        /* ── Bottom Bar ── */
+        /* Bottom Bar */
         .bottom-bar {
             position: fixed;
             bottom: 0;
@@ -271,9 +313,12 @@ require_once '../process/proses_admin_home.php';
             font-weight: 500;
             transition: opacity 0.3s;
         }
-        .btn-lanjutkan:hover { opacity: 0.9; }
 
-        /* ── Modal ── */
+        .btn-lanjutkan:hover {
+            opacity: 0.9;
+        }
+
+        /* Modal Styles */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0;
@@ -287,6 +332,7 @@ require_once '../process/proses_admin_home.php';
             visibility: hidden;
             transition: opacity 0.3s ease;
         }
+        
         .modal-overlay.active { opacity: 1; visibility: visible; }
 
         .modal-box {
@@ -315,7 +361,9 @@ require_once '../process/proses_admin_home.php';
             flex-direction: column;
         }
 
-        .form-group label { font-size: 13px; margin-bottom: 5px; color: #555; font-weight: 500; }
+        .form-group label { 
+            font-size: 13px; margin-bottom: 5px; color: #555; font-weight: 500; 
+        }
 
         .form-control {
             padding: 10px;
@@ -349,18 +397,20 @@ require_once '../process/proses_admin_home.php';
             margin-top: 10px;
             font-family: var(--font-main);
         }
+        
         .btn-submit:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
 
-    <!-- ## Sidebar Navigasi -->
     <aside class="sidebar">
         <div class="hamburger-menu">
             <div></div><div></div><div></div>
         </div>
+        
         <div class="sidebar-menu">
             <a href="?" class="sidebar-item <?= empty($_GET['kategori']) ? 'selected' : '' ?>">Semua (All)</a>
+            
             <?php foreach($kategori_list as $kat): ?>
                 <a href="?kategori=<?= $kat['id_kategori'] ?>"
                    class="sidebar-item <?= (isset($_GET['kategori']) && $_GET['kategori'] == $kat['id_kategori']) ? 'selected' : '' ?>">
@@ -370,14 +420,11 @@ require_once '../process/proses_admin_home.php';
         </div>
     </aside>
 
-    <!-- ## Konten Utama -->
     <main class="main-content">
 
-        <!-- ## Top Bar -->
         <div class="top-bar">
             <div class="top-actions-left">
 
-                <!-- Filter Sort (dengan form GET, pertahankan kategori aktif) -->
                 <form method="GET" style="display:flex; gap:15px; align-items:center;">
                     <input type="hidden" name="kategori" value="<?= htmlspecialchars($_GET['kategori'] ?? '') ?>">
 
@@ -396,8 +443,7 @@ require_once '../process/proses_admin_home.php';
                     </button>
                 </form>
 
-                <!-- Tombol Tambah Produk Baru -->
-                <button class="btn-tambah" id="btnOpenAdd">
+                <button type="button" class="btn-tambah" id="btnOpenAdd">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10"></circle>
@@ -411,47 +457,45 @@ require_once '../process/proses_admin_home.php';
 
         <div class="scroll-track"></div>
 
-        <!-- ## Grid Produk -->
         <div class="product-grid">
-
             <?php foreach($barang_list as $barang): ?>
 
-            <!-- Form pembungkus: aksi default = add_cart -->
             <form action="../process/add_cart.php" method="POST" style="margin:0;">
+                
                 <input type="hidden" name="id_barang" value="<?= htmlspecialchars($barang['id_barang']) ?>">
-                <input type="hidden" name="harga"     value="<?= htmlspecialchars($barang['harga']) ?>">
+                <input type="hidden" name="harga" value="<?= htmlspecialchars($barang['harga']) ?>">
                 <input type="hidden" name="jumlah_barang" value="1">
 
                 <div class="product-card">
 
-                    <!-- Bagian atas: Gambar -->
                     <div class="card-top">
                         <?php if($barang['qty_dipesan'] > 0): ?>
                             <div class="card-badge"><?= $barang['qty_dipesan'] ?></div>
-                            <!-- Tombol kurang membajak form ke kurang_cart.php -->
+                            
                             <button type="submit" class="btn-kurang"
                                     formaction="../process/kurang_cart.php"
                                     title="Kurangi 1">−</button>
                         <?php endif; ?>
+                        
                         <img src="../public/menuPict/<?= htmlspecialchars($barang['pict']) ?>"
                              style="width:100%; height:100%; object-fit:cover;"
                              alt="<?= htmlspecialchars($barang['nama_barang']) ?>">
                     </div>
 
-                    <!-- Bagian bawah: Info + Tombol submit utama -->
-                    <button type="submit" class="card-bottom">
-
-                        <!-- Tombol Edit: stopPropagation mencegah form ter-submit -->
+                    <div class="card-bottom-wrapper">
+                        
                         <button type="button" class="btn-edit-card"
                                 onclick="openEditModal(event, <?= (int)$barang['id_barang'] ?>)">
                             edit
                         </button>
 
-                        <div class="card-kategori">Kategori : <?= str_pad($barang['id_kategori'], 2, '0', STR_PAD_LEFT) ?></div>
-                        <div class="card-title"><?= htmlspecialchars($barang['nama_barang']) ?></div>
-                        <div class="card-stok">Stok : <?= htmlspecialchars($barang['stok']) ?></div>
-                        <div class="card-price">Rp. <?= number_format($barang['harga'], 0, ',', '.') ?></div>
-                    </button>
+                        <button type="submit" class="card-submit-area">
+                            <div class="card-kategori">Kategori : <?= str_pad($barang['id_kategori'], 2, '0', STR_PAD_LEFT) ?></div>
+                            <div class="card-title"><?= htmlspecialchars($barang['nama_barang']) ?></div>
+                            <div class="card-stok">Stok : <?= htmlspecialchars($barang['stok']) ?></div>
+                            <div class="card-price">Rp. <?= number_format($barang['harga'], 0, ',', '.') ?></div>
+                        </button>
+                    </div>
 
                 </div>
             </form>
@@ -460,29 +504,25 @@ require_once '../process/proses_admin_home.php';
         </div>
     </main>
 
-    <!-- ## Bottom Bar -->
     <div class="bottom-bar">
         <div class="bottom-info">
             <span>Total Amount : Rp. <?= number_format($total_keranjang, 0, ',', '.') ?></span>
+            
             <span>Total Barang : <?= $jumlah_item ?></span>
         </div>
+        
         <a href="checkout.php" class="btn-lanjutkan">Lanjutkan</a>
     </div>
 
-
-    <!-- ## Modal Tambah / Edit Barang -->
     <div class="modal-overlay" id="itemModal">
         <div class="modal-box">
             <button class="modal-close" id="btnCloseModal">&times;</button>
             <h3 style="margin-bottom:20px; color:var(--sidebar-bg);" id="modalTitle">Tambah Barang Baru</h3>
 
-            <!-- Action mengarah ke proses_admin_home.php -->
             <form action="../process/proses_admin_home.php" method="POST" enctype="multipart/form-data">
 
-                <!-- Field penanda aksi (wajib ada agar back-end tahu ini POST CRUD) -->
                 <input type="hidden" name="aksi_barang" value="1">
 
-                <!-- Hidden id_barang: kosong = tambah baru, berisi = edit -->
                 <input type="hidden" name="id_barang" id="form_id_barang" value="">
 
                 <div class="form-group">
@@ -521,7 +561,6 @@ require_once '../process/proses_admin_home.php';
         </div>
     </div>
 
-
     <script>
         const modal      = document.getElementById('itemModal');
         const modalTitle = document.getElementById('modalTitle');
@@ -538,7 +577,8 @@ require_once '../process/proses_admin_home.php';
 
         /* ── Buka Modal: Mode Edit ── */
         function openEditModal(event, id) {
-            event.stopPropagation(); // Cegah form card ter-submit
+            // event.stopPropagation() menjaga agar form keranjang tidak ter-submit tanpa sengaja
+            event.stopPropagation(); 
 
             modalTitle.textContent = 'Edit Barang (memuat data...)';
             modal.classList.add('active');
