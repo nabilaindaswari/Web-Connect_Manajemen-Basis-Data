@@ -327,7 +327,8 @@ $cart_list = $_SESSION['keranjang'] ?? [];
                     <span>Rp <?= number_format($total_harga, 0, ',', '.') ?></span>
                 </div>
                 <div class="summary-row">
-                    <span>TUNAI</span>
+                    <span>BAYAR
+                    </span>
                     <span>Rp <?= number_format($total_bayar, 0, ',', '.') ?></span>
                 </div>
                 <div class="summary-row">
@@ -338,7 +339,7 @@ $cart_list = $_SESSION['keranjang'] ?? [];
 
             <div class="receipt-footer">
                 <p>Terima Kasih Atas Kunjungan Anda</p>
-                <p>Barang yang sudah dibeli tidak dapat ditukar</p>
+                <p>Barang yang sudah dibeli tidak dapat ditukar atau dikembalikan</p>
             </div>
         </div>
 
@@ -346,9 +347,8 @@ $cart_list = $_SESSION['keranjang'] ?? [];
             <button onclick="window.print()" class="btn btn-secondary">
                 Cetak Struk
             </button>
-            <a href="admin_home.php" class="btn btn-primary">
-                Kembali ke Home
-            </a>
+            <a href="<?= (isset($_SESSION['access_level']) && $_SESSION['access_level'] >= 11) ? '../public/admin_home.php' : '../public/kasir_home.php' ?>" class="btn btn-primary">← Kembali ke Home</a>
+           
         </div>
 
     </div>
