@@ -148,16 +148,6 @@ require_once '../process/proses_kasir_home.php';
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        /* Scrollbar track for visual detail */
-        .scroll-track {
-            position: absolute;
-            right: 15px;
-            top: 100px;
-            bottom: 120px;
-            width: 4px;
-            background-color: #432E22;
-        }
-
         /* Product Grid */
         .product-grid {
             display: grid;
@@ -384,8 +374,6 @@ require_once '../process/proses_kasir_home.php';
                 <!-- (Kasir tidak memiliki tombol Tambah Produk Baru) -->
             </div>
         </div>
-
-        <div class="scroll-track"></div>
 
         <!-- ## bagian grid daftar produk -->
         <div class="product-grid">

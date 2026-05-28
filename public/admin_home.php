@@ -151,16 +151,6 @@ require_once '../process/proses_admin_home.php';
             text-decoration: none;
         }
 
-        /* Scrollbar track for visual detail */
-        .scroll-track {
-            position: absolute;
-            right: 15px;
-            top: 100px;
-            bottom: 120px;
-            width: 4px;
-            background-color: #432E22;
-        }
-
         /* Product Grid */
         .product-grid {
             display: grid;
@@ -455,7 +445,6 @@ require_once '../process/proses_admin_home.php';
             </div>
         </div>
 
-        <div class="scroll-track"></div>
 
         <div class="product-grid">
             <?php foreach($barang_list as $barang): ?>

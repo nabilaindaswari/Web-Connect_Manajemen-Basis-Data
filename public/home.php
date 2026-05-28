@@ -11,6 +11,7 @@ require_once '../process/proses_home.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - Toko Sembako Indojaya</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
         :root {
             --font-main: 'Google Sans', 'Inter', sans-serif;
@@ -47,6 +48,7 @@ require_once '../process/proses_home.php';
             display: flex;
             flex-direction: column;
             color: var(--text-light);
+            z-index: 10;
         }
 
         .hamburger-menu {
@@ -85,6 +87,11 @@ require_once '../process/proses_home.php';
             background-color: rgba(255, 255, 255, 0.05);
         }
 
+        .sidebar-item.selected {
+            background-color: rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+        }
+
         /* Main Content */
         .main-content {
             flex: 1;
@@ -119,7 +126,6 @@ require_once '../process/proses_home.php';
             width: 180px;
             appearance: none;
             -webkit-appearance: none;
-            -moz-appearance: none;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 10px center;
@@ -140,6 +146,7 @@ require_once '../process/proses_home.php';
             align-items: center;
             gap: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-decoration: none;
         }
 
         .btn-login {
@@ -150,16 +157,12 @@ require_once '../process/proses_home.php';
             border-radius: 6px;
             font-size: 16px;
             font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: opacity 0.2s;
         }
 
-        /* Scrollbar track for visual detail */
-        .scroll-track {
-            position: absolute;
-            right: 15px;
-            top: 100px;
-            bottom: 40px;
-            width: 4px;
-            background-color: #432E22;
+        .btn-login:hover {
+            opacity: 0.9;
         }
 
         /* Product Grid */
@@ -179,6 +182,13 @@ require_once '../process/proses_home.php';
             height: 280px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             text-decoration: none;
+            transition: transform 0.2s;
+            border: none;
+            width: 100%;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-4px);
         }
 
         .card-top {
@@ -190,105 +200,84 @@ require_once '../process/proses_home.php';
             position: relative;
             border-top-left-radius: var(--border-radius-card);
             border-top-right-radius: var(--border-radius-card);
-        }
-
-        /* Image icon placeholder */
-        .img-icon {
-            width: 30px;
-            height: 30px;
-            border: 2px solid #333;
-            border-radius: 4px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            overflow: hidden;
         }
 
         .card-bottom {
             background-color: var(--card-bottom-bg);
             flex: 1;
-            padding: 15px;
-            color: var(--text-light);
+            padding: 12px 15px 15px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             border-bottom-left-radius: var(--border-radius-card);
             border-bottom-right-radius: var(--border-radius-card);
+            color: var(--text-light);
+            text-align: left;
         }
 
-        .card-kategori {
-            font-size: 11px;
-            margin-bottom: 2px;
-        }
-
-        .card-title {
-            font-size: 16px;
-            font-weight: 500;
-            margin-bottom: 2px;
-        }
-
-        .card-stok {
-            font-size: 11px;
-            margin-bottom: 5px;
-        }
-
-        .card-price {
-            font-size: 16px;
-            font-weight: 500;
-        }
+        .card-kategori { font-size: 11px; margin-bottom: 2px; font-family: var(--font-main); }
+        .card-title    { font-size: 16px; font-weight: 500; margin-bottom: 2px; font-family: var(--font-main); }
+        .card-stok     { font-size: 11px; margin-bottom: 5px; font-family: var(--font-main); }
+        .card-price    { font-size: 16px; font-weight: 500; font-family: var(--font-main); }
 
     </style>
 </head>
 <body>
 
-    <!-- Sidebar -->
     <aside class="sidebar">
         <div class="hamburger-menu">
-            <div></div>
-            <div></div>
-            <div></div>
+            <div></div><div></div><div></div>
         </div>
         
         <div class="sidebar-menu">
-            <a href="#" class="sidebar-item">Semua(All)</a>
+            <a href="?" class="sidebar-item <?= empty($_GET['kategori']) ? 'selected' : '' ?>">Semua (All)</a>
+            
             <?php foreach($kategori_list as $kat): ?>
-                <a href="#" class="sidebar-item"><?= htmlspecialchars($kat['nama_kategori']) ?></a>
+                <a href="?kategori=<?= $kat['id_kategori'] ?>"
+                   class="sidebar-item <?= (isset($_GET['kategori']) && $_GET['kategori'] == $kat['id_kategori']) ? 'selected' : '' ?>">
+                    <?= htmlspecialchars($kat['nama_kategori']) ?>
+                </a>
             <?php endforeach; ?>
         </div>
     </aside>
 
-    <!-- Main Content -->
     <main class="main-content">
-        <!-- Top Bar -->
+
         <div class="top-bar">
             <div class="top-actions-left">
-                <select class="select-sort">
-                    <option>Urutkan Harga</option>
-                    <option>Termurah</option>
-                    <option>Termahal</option>
-                </select>
-                <button class="btn-terapkan">
-                    <!-- Filter SVG Icon Placeholder -->
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-                    </svg>
-                    Terapkan
-                </button>
+                <form method="GET" style="display:flex; gap:15px; align-items:center;">
+                    <input type="hidden" name="kategori" value="<?= htmlspecialchars($_GET['kategori'] ?? '') ?>">
+
+                    <select name="sort" class="select-sort">
+                        <option value="">Urutkan Harga</option>
+                        <option value="termurah" <?= (isset($_GET['sort']) && $_GET['sort'] === 'termurah') ? 'selected' : '' ?>>Termurah</option>
+                        <option value="termahal" <?= (isset($_GET['sort']) && $_GET['sort'] === 'termahal') ? 'selected' : '' ?>>Termahal</option>
+                    </select>
+
+                    <button type="submit" class="btn-terapkan">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                        </svg>
+                        Terapkan
+                    </button>
+                </form>
             </div>
-            
+
             <a href="login.php" class="btn-login">Login</a>
         </div>
 
-        <!-- Scroll track line like in the image -->
-        <div class="scroll-track"></div>
-
-        <!-- Product Grid -->
         <div class="product-grid">
             <?php foreach($barang_list as $barang): ?>
+            
             <div class="product-card">
                 <div class="card-top">
-                    <img src="../public/menuPict/<?= htmlspecialchars($barang['pict']) ?>" style="width:100%; height:100%; object-fit:cover;">
+                    <img src="../public/menuPict/<?= htmlspecialchars($barang['pict']) ?>"
+                         style="width:100%; height:100%; object-fit:cover;"
+                         alt="<?= htmlspecialchars($barang['nama_barang']) ?>">
                 </div>
+
                 <div class="card-bottom">
                     <div class="card-kategori">Kategori : <?= str_pad($barang['id_kategori'], 2, '0', STR_PAD_LEFT) ?></div>
                     <div class="card-title"><?= htmlspecialchars($barang['nama_barang']) ?></div>
@@ -296,10 +285,11 @@ require_once '../process/proses_home.php';
                     <div class="card-price">Rp. <?= number_format($barang['harga'], 0, ',', '.') ?></div>
                 </div>
             </div>
+
             <?php endforeach; ?>
         </div>
+        
     </main>
 
 </body>
 </html>
-<!---->

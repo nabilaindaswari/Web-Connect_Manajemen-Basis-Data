@@ -144,14 +144,6 @@ require_once '../process/proses_admin_home.php';
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .scroll-track {
-            position: absolute;
-            right: 15px;
-            top: 100px;
-            bottom: 40px;
-            width: 4px;
-            background-color: #432E22;
-        }
 
         .product-grid {
             display: grid;
@@ -429,7 +421,6 @@ require_once '../process/proses_admin_home.php';
             </div>
         </div>
 
-        <div class="scroll-track"></div>
 
         <!-- ## bagian grid daftar produk -->
         <div class="product-grid">
