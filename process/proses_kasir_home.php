@@ -1,6 +1,21 @@
 <?php
-
+session_start();
 require_once '../config/database.php';
+
+/* ======================================================
+   GUARD: CEK AUTENTIKASI & HAK AKSES KASIR (1-10)
+====================================================== */
+
+if (
+    !isset($_SESSION['authenticated']) ||
+    $_SESSION['authenticated'] !== true ||
+    !isset($_SESSION['access_level']) ||
+    $_SESSION['access_level'] < 1 ||
+    $_SESSION['access_level'] > 10
+) {
+    header('Location: ../public/login.php?error=accesskasir');
+    exit;
+}
 
 /* ======================================================
    SESSION KERANJANG

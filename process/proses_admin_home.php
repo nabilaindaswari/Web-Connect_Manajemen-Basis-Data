@@ -15,7 +15,7 @@ if (
     $_SESSION['access_level'] < 11 ||
     $_SESSION['access_level'] > 20
 ) {
-    header('Location: ../public/login.php?error=access');
+    header('Location: ../public/login.php?error=accessadmin');
     exit;
 }
 
