@@ -105,8 +105,12 @@
                         echo "Username atau password tidak valid!";
                     } else if ($_GET['error'] == 'empty') {
                         echo "Harap isi semua kolom";
-                    } else if ($_GET['error'] == 'access') {
-                        echo "Harap melakukan login terlebih dahulu!";
+                    } else if ($_GET['error'] == 'accessadmin') {
+                        echo "Akses ditolak. Harap login sebagai admin.";
+                    } else if($_GET['error'] == 'accesskasir') {
+                        echo "Akses ditolak. Harap login sebagai kasir.";
+                    } else {
+                        echo "Terjadi kesalahan. Silakan coba lagi.";
                     }
                 ?>
             </div>
