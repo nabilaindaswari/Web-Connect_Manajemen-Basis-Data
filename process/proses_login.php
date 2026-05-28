@@ -63,7 +63,7 @@ try {
    AMBIL DATA USER BESERTA ACCESS LEVEL
 ====================================================== */
 
-$sql  = 'SELECT id_user, username, password_hash, access_level FROM users WHERE username = :username LIMIT 1';
+$sql  = 'SELECT id_kasir, username, password_hash, access_level FROM kasir WHERE username = :username LIMIT 1';
 $stmt = $pdo->prepare($sql);
 $stmt->execute([':username' => $username]);
 $user = $stmt->fetch();
@@ -76,10 +76,10 @@ if ($user && password_verify($password, $user['password_hash'])) {
     if (password_needs_rehash($user['password_hash'], PASSWORD_DEFAULT)) {
 
         $newHash = password_hash($password, PASSWORD_DEFAULT);
-        $update  = $pdo->prepare('UPDATE users SET password_hash = :hash WHERE id_user = :id');
+        $update  = $pdo->prepare('UPDATE kasir SET password_hash = :hash WHERE id_kasir = :id');
         $update->execute([
             ':hash' => $newHash,
-            ':id'   => $user['id_user']
+            ':id'   => $user['id_kasir']
         ]);
     }
 }
@@ -101,7 +101,7 @@ $_SESSION['login_attempts'] = 0;
 unset($_SESSION['lockout_expires']);
 
 session_regenerate_id(true);
-$_SESSION['user_id']       = $user['id_user'];
+$_SESSION['user_id']       = $user['id_kasir'];
 $_SESSION['username']      = $user['username'];
 $_SESSION['access_level']  = (int)$user['access_level'];
 $_SESSION['authenticated'] = true;
