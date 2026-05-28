@@ -1,6 +1,5 @@
 <?php
-session_start();
-
+require_once '../process/proses_transaksi.php';
 /* ======================================================
    [AREA BACKEND] 
    Backend dev akan menaruh logika query INSERT ke tabel 
