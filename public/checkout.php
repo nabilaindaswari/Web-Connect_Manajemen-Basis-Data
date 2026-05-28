@@ -321,7 +321,10 @@ $metode_list = $stmtMetode->fetchAll(PDO::FETCH_ASSOC);
 
     <main class="main-content">
         <div class="table-container">
-            <a href="kasir_home.php" class="btn-back">← Kembali ke Kasir</a>
+            
+
+            <a href="<?= (isset($_SESSION['access_level']) && $_SESSION['access_level'] >= 11) ? '../public/admin_home.php' : '../public/kasir_home.php' ?>" class="btn-back">← Kembali ke Kasir</a>
+           
             <h2 class="header-title">Rincian Pesanan</h2>
             
             <table>
@@ -368,7 +371,7 @@ $metode_list = $stmtMetode->fetchAll(PDO::FETCH_ASSOC);
             <button class="modal-close" id="btnCloseModal">&times;</button>
             <h3 class="modal-title">Pembayaran</h3>
             
-            <form action="../process/proses_transaksi.php" method="POST">
+            <form action="../public/transaksi.php" method="POSTss">
                 
                 <input type="hidden" name="total_harga" id="input_total_harga" value="<?= $total_harga ?>">
                 
