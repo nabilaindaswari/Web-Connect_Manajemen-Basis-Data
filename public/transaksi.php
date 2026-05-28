@@ -10,7 +10,7 @@ session_start();
 
 // Simulasi data untuk kebutuhan Front-End (Preview Struk)
 $tanggal = date('d/m/Y H:i');
-$no_struk = 'TRX-' . $nomor_struk;
+$no_struk = 'TRX-$nomor_struk';
 
 $total_harga = isset($_POST['total_harga']) ? (int)$_POST['total_harga'] : 0;
 $total_bayar = isset($_POST['total_bayar']) ? (int)$_POST['total_bayar'] : 0;

@@ -227,7 +227,6 @@ require_once '../process/proses_admin_home.php';
             z-index: 2;
         }
 
-        /* Wrapper div untuk menghindari nested button HTML invalid */
         .card-bottom-wrapper {
             background-color: var(--card-bottom-bg);
             flex: 1;
@@ -362,6 +361,8 @@ require_once '../process/proses_admin_home.php';
             background-color: #EFE4D3;
             font-family: var(--font-main);
             font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
         }
 
         select.form-control {
@@ -389,6 +390,20 @@ require_once '../process/proses_admin_home.php';
         }
         
         .btn-submit:hover { opacity: 0.9; }
+
+        /* Tambahan CSS Untuk Warning Input */
+        .warning-text {
+            color: #d93025;
+            font-size: 11.5px;
+            margin-top: 5px;
+            font-weight: 500;
+            display: none; /* Disembunyikan secara default */
+        }
+
+        .input-error {
+            color: #d93025 !important;
+            border-color: #d93025 !important;
+        }
     </style>
 </head>
 <body>
@@ -411,19 +426,15 @@ require_once '../process/proses_admin_home.php';
     </aside>
 
     <main class="main-content">
-
         <div class="top-bar">
             <div class="top-actions-left">
-
                 <form method="GET" style="display:flex; gap:15px; align-items:center;">
                     <input type="hidden" name="kategori" value="<?= htmlspecialchars($_GET['kategori'] ?? '') ?>">
-
                     <select name="sort" class="select-sort">
                         <option value="">Urutkan Harga</option>
                         <option value="termurah" <?= ($sort === 'termurah') ? 'selected' : '' ?>>Termurah</option>
                         <option value="termahal" <?= ($sort === 'termahal') ? 'selected' : '' ?>>Termahal</option>
                     </select>
-
                     <button type="submit" class="btn-terapkan">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -445,39 +456,31 @@ require_once '../process/proses_admin_home.php';
             </div>
         </div>
 
-
         <div class="product-grid">
             <?php foreach($barang_list as $barang): ?>
-
             <form action="../process/add_cart.php" method="POST" style="margin:0;">
-                
                 <input type="hidden" name="id_barang" value="<?= htmlspecialchars($barang['id_barang']) ?>">
                 <input type="hidden" name="harga" value="<?= htmlspecialchars($barang['harga']) ?>">
                 <input type="hidden" name="jumlah_barang" value="1">
 
                 <div class="product-card">
-
                     <div class="card-top">
                         <?php if($barang['qty_dipesan'] > 0): ?>
                             <div class="card-badge"><?= $barang['qty_dipesan'] ?></div>
-                            
                             <button type="submit" class="btn-kurang"
                                     formaction="../process/kurang_cart.php"
                                     title="Kurangi 1">−</button>
                         <?php endif; ?>
-                        
                         <img src="../public/menuPict/<?= htmlspecialchars($barang['pict']) ?>"
                              style="width:100%; height:100%; object-fit:cover;"
                              alt="<?= htmlspecialchars($barang['nama_barang']) ?>">
                     </div>
 
                     <div class="card-bottom-wrapper">
-                        
                         <button type="button" class="btn-edit-card"
                                 onclick="openEditModal(event, <?= (int)$barang['id_barang'] ?>)">
                             edit
                         </button>
-
                         <button type="submit" class="card-submit-area">
                             <div class="card-kategori">Kategori : <?= str_pad($barang['id_kategori'], 2, '0', STR_PAD_LEFT) ?></div>
                             <div class="card-title"><?= htmlspecialchars($barang['nama_barang']) ?></div>
@@ -485,10 +488,8 @@ require_once '../process/proses_admin_home.php';
                             <div class="card-price">Rp. <?= number_format($barang['harga'], 0, ',', '.') ?></div>
                         </button>
                     </div>
-
                 </div>
             </form>
-
             <?php endforeach; ?>
         </div>
     </main>
@@ -496,10 +497,8 @@ require_once '../process/proses_admin_home.php';
     <div class="bottom-bar">
         <div class="bottom-info">
             <span>Total Amount : Rp. <?= number_format($total_keranjang, 0, ',', '.') ?></span>
-            
             <span>Total Barang : <?= $jumlah_item ?></span>
         </div>
-        
         <a href="checkout.php" class="btn-lanjutkan">Lanjutkan</a>
     </div>
 
@@ -508,10 +507,8 @@ require_once '../process/proses_admin_home.php';
             <button class="modal-close" id="btnCloseModal">&times;</button>
             <h3 style="margin-bottom:20px; color:var(--sidebar-bg);" id="modalTitle">Tambah Barang Baru</h3>
 
-            <form action="../process/proses_admin_home.php" method="POST" enctype="multipart/form-data">
-
+            <form id="modalForm" action="../process/proses_admin_home.php" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="aksi_barang" value="1">
-
                 <input type="hidden" name="id_barang" id="form_id_barang" value="">
 
                 <div class="form-group">
@@ -532,12 +529,14 @@ require_once '../process/proses_admin_home.php';
 
                 <div class="form-group">
                     <label>Stok</label>
-                    <input type="number" name="stok" id="form_stok" class="form-control" required min="0">
+                    <input type="text" inputmode="numeric" name="stok" id="form_stok" class="form-control" required>
+                    <span id="warning_stok" class="warning-text"></span>
                 </div>
 
                 <div class="form-group">
                     <label>Harga Satuan (Rp)</label>
-                    <input type="number" name="harga" id="form_harga" class="form-control" required min="0">
+                    <input type="text" inputmode="numeric" name="harga" id="form_harga" class="form-control" required>
+                    <span id="warning_harga" class="warning-text"></span>
                 </div>
 
                 <div class="form-group">
@@ -555,6 +554,62 @@ require_once '../process/proses_admin_home.php';
         const modalTitle = document.getElementById('modalTitle');
         const btnOpenAdd = document.getElementById('btnOpenAdd');
         const btnClose   = document.getElementById('btnCloseModal');
+        const modalForm  = document.getElementById('modalForm');
+
+        // Elemen Input & Warning
+        const formStok     = document.getElementById('form_stok');
+        const formHarga    = document.getElementById('form_harga');
+        const warningStok  = document.getElementById('warning_stok');
+        const warningHarga = document.getElementById('warning_harga');
+
+        /* ── Fungsi Validasi Super Spesifik ── */
+        function validateNumberInput(inputEl, warningEl) {
+            const val = inputEl.value;
+            let errorMessage = "";
+
+            if (val === "") {
+                // Diabaikan karena tag 'required' akan menanganinya
+            } 
+            else if (val.includes('-')) {
+                errorMessage = "Peringatan: Nilai tidak bisa mines (negatif).";
+            } 
+            // Cek apakah ada karakter selain angka (termasuk operator +, *, /, spasi atau huruf)
+            else if (/[^0-9]/.test(val)) {
+                errorMessage = "Peringatan: Tidak boleh mengandung tanda operasi, huruf, atau spasi.";
+            } 
+            else {
+                const numericVal = parseInt(val, 10);
+                if (numericVal > 2147483647) {
+                    errorMessage = "Peringatan: Nilai melebihi batas maksimal (2.147.483.647).";
+                }
+            }
+
+            // Terapkan UI Warning
+            if (errorMessage) {
+                warningEl.textContent = errorMessage;
+                warningEl.style.display = 'block';
+                inputEl.classList.add('input-error');
+                return false; // Invalid
+            } else {
+                warningEl.style.display = 'none';
+                inputEl.classList.remove('input-error');
+                return true;  // Valid
+            }
+        }
+
+        // Jalankan validasi secara real-time saat user mengetik
+        formStok.addEventListener('input', () => validateNumberInput(formStok, warningStok));
+        formHarga.addEventListener('input', () => validateNumberInput(formHarga, warningHarga));
+
+        // Cegah Form Submit jika ada error
+        modalForm.addEventListener('submit', function(e) {
+            const isStokValid = validateNumberInput(formStok, warningStok);
+            const isHargaValid = validateNumberInput(formHarga, warningHarga);
+
+            if (!isStokValid || !isHargaValid) {
+                e.preventDefault(); // Batalkan pengiriman ke backend
+            }
+        });
 
         /* ── Buka Modal: Mode Tambah ── */
         btnOpenAdd.addEventListener('click', function () {
@@ -566,13 +621,11 @@ require_once '../process/proses_admin_home.php';
 
         /* ── Buka Modal: Mode Edit ── */
         function openEditModal(event, id) {
-            // event.stopPropagation() menjaga agar form keranjang tidak ter-submit tanpa sengaja
             event.stopPropagation(); 
-
+            resetForm();
             modalTitle.textContent = 'Edit Barang (memuat data...)';
             modal.classList.add('active');
 
-            /* Ambil data barang via AJAX ke proses_admin_home.php */
             fetch('../process/proses_admin_home.php?get_barang=' + id)
                 .then(res => res.json())
                 .then(data => {
@@ -582,12 +635,16 @@ require_once '../process/proses_admin_home.php';
                         return;
                     }
                     document.getElementById('form_id_barang').value   = data.id_barang;
-                    document.getElementById('form_nama_barang').value  = data.nama_barang;
-                    document.getElementById('form_id_kategori').value  = data.id_kategori;
-                    document.getElementById('form_stok').value         = data.stok;
-                    document.getElementById('form_harga').value        = data.harga;
+                    document.getElementById('form_nama_barang').value = data.nama_barang;
+                    document.getElementById('form_id_kategori').value = data.id_kategori;
+                    document.getElementById('form_stok').value        = data.stok;
+                    document.getElementById('form_harga').value       = data.harga;
                     document.getElementById('pict_hint').textContent   = '(kosongkan jika tidak ingin mengganti gambar)';
                     modalTitle.textContent = 'Edit Barang';
+
+                    // Validasi awal ketika data terisi dari backend
+                    validateNumberInput(formStok, warningStok);
+                    validateNumberInput(formHarga, warningHarga);
                 })
                 .catch(() => {
                     alert('Terjadi kesalahan saat mengambil data.');
@@ -609,11 +666,14 @@ require_once '../process/proses_admin_home.php';
 
         /* ── Reset Form ── */
         function resetForm() {
-            document.getElementById('form_id_barang').value  = '';
-            document.getElementById('form_nama_barang').value = '';
-            document.getElementById('form_stok').value       = '';
-            document.getElementById('form_harga').value      = '';
-            document.getElementById('form_pict').value       = '';
+            modalForm.reset();
+            document.getElementById('form_id_barang').value = '';
+            
+            // Reset status error
+            warningStok.style.display = 'none';
+            warningHarga.style.display = 'none';
+            formStok.classList.remove('input-error');
+            formHarga.classList.remove('input-error');
         }
     </script>
 
