@@ -10,7 +10,7 @@ session_start();
 
 // Simulasi data untuk kebutuhan Front-End (Preview Struk)
 $tanggal = date('d/m/Y H:i');
-$no_struk = 'TRX-' . strtoupper(substr(uniqid(), -6));
+$no_struk = 'TRX-' . $nomor_struk;
 
 $total_harga = isset($_POST['total_harga']) ? (int)$_POST['total_harga'] : 0;
 $total_bayar = isset($_POST['total_bayar']) ? (int)$_POST['total_bayar'] : 0;
@@ -20,15 +20,15 @@ $kembalian = $total_bayar - $total_harga;
 $cart_list = $_SESSION['keranjang'] ?? [];
 
 // Dummy fallback jika langsung buka file ini tanpa lewat checkout
-if (empty($cart_list)) {
-    $cart_list = [
-        ['nama_barang' => 'Beras Pandan Wangi 5kg', 'jumlah_barang' => 1, 'harga' => 75000, 'subtotal' => 75000],
-        ['nama_barang' => 'Minyak Goreng Bimoli 2L', 'jumlah_barang' => 2, 'harga' => 35000, 'subtotal' => 70000]
-    ];
-    $total_harga = 145000;
-    $total_bayar = 150000;
-    $kembalian = 5000;
-}
+// if (empty($cart_list)) {
+//     $cart_list = [
+//         ['nama_barang' => 'Beras Pandan Wangi 5kg', 'jumlah_barang' => 1, 'harga' => 75000, 'subtotal' => 75000],
+//         ['nama_barang' => 'Minyak Goreng Bimoli 2L', 'jumlah_barang' => 2, 'harga' => 35000, 'subtotal' => 70000]
+//     ];
+//     $total_harga = 145000;
+//     $total_bayar = 150000;
+//     $kembalian = 5000;
+// }
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -292,7 +292,7 @@ if (empty($cart_list)) {
             <div class="receipt-info">
                 <div>
                     <div>No: <?= $no_struk ?></div>
-                    <div>Ksr: <?= $kasir ?></div>
+                    <div>Kasir: <?= $kasir ?></div>
                 </div>
                 <div style="text-align: right;">
                     <div><?= $tanggal ?></div>
