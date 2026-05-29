@@ -59,6 +59,8 @@
             padding: 10px;
             background-color: #8da750;
             color: white;
+            border: none;
+            border-radius: 4px;
             font-size: 1rem;
             cursor: pointer;
             margin-top: 1rem;
@@ -74,18 +76,6 @@
             text-align: center;
             margin-bottom: 1rem;
             font-size: 0.85rem;
-        }
-        .login-link {
-            display: block;
-            text-align: center;
-            margin-top: 1rem;
-            font-size: 0.9rem;
-            color: #555;
-            text-decoration: none;
-        }
-        .login-link:hover {
-            color: #8da750;
-            text-decoration: underline;
         }
     </style>
 </head>
