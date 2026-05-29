@@ -59,8 +59,6 @@
             padding: 10px;
             background-color: #8da750;
             color: white;
-            border: none;
-            border-radius: 4px;
             font-size: 1rem;
             cursor: pointer;
             margin-top: 1rem;
@@ -135,7 +133,6 @@
             </div>
 
             <button type="submit" class="btn-login" name="btn_login">Login</button>
-            <a href="register.php" class="login-link">Belum punya akun? Buat di sini</a>
         </form>
     </div>
 
