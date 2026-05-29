@@ -2,7 +2,7 @@
 session_start();
 require_once '../config/database.php';
 
-$id_kasir        = $_SESSION['user_id'];
+$id_kasir        = $_SESSION['user_id'] ?? null;
 $id_metode       = (int)($_POST['id_metode'] ?? 0);
 $total_bayar     = (int)($_POST['total_bayar'] ?? 0);
 $total_harga     = (int)($_POST['total_harga'] ?? 0);
@@ -27,14 +27,26 @@ $kasir = $userRow ? $userRow['nama_lengkap'] : $username_session;
 
 
 
-$stmtTransaksi = $pdo->prepare("CALL SP_Checkout_Kasir(:p_id_kasir, :p_id_metode, :p_total_bayar, :p_json_keranjang, @kembalian)");
-var_dump($id_metode);
-die();
+$stmtTransaksi = $pdo->prepare("CALL SP_Checkout_Kasir(:p_id_kasir, :p_id_metode, :p_total_bayar, :p_json_keranjang, @kembalian, @idtransaksix)");
+// var_dump($id_metode);
+// die();
 $stmtTransaksi->execute([
     ':p_id_kasir'       => $id_kasir,
     ':p_id_metode'      => $id_metode,
     ':p_total_bayar'    => $total_bayar,
     ':p_json_keranjang' => $p_json_keranjang,
 ]);
+
+$stmtTransaksi->closeCursor();
+
+$getData = $pdo->query("
+    SELECT @kembalian AS kembalian,
+           @idtransaksix AS idtransaksix
+")->fetch(PDO::FETCH_ASSOC);
+
+$kembalian = $getData['kembalian'];
+$nomor_struk = $getData['idtransaksix'];
+
+
 
 ?>

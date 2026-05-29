@@ -14,7 +14,7 @@ $no_struk = "TRX-$nomor_struk";
 $total_harga = isset($_POST['total_harga']) ? (int)$_POST['total_harga'] : 0;
 $total_bayar = isset($_POST['total_bayar']) ? (int)$_POST['total_bayar'] : 0;
 $id_metode = $_POST['id_metode'];
-$kasir = $_SESSION['nama_user'] ?? 'Kasir Default';
+# $kasir = $_SESSION['nama_kasir'] ?? 'Kasir Default';
 $kembalian = $total_bayar - $total_harga;
 
 // Mengambil data keranjang sebelum dikosongkan oleh backend
@@ -30,6 +30,22 @@ $cart_list = $_SESSION['keranjang'] ?? [];
 //     $total_bayar = 150000;
 //     $kembalian = 5000;
 // }
+
+foreach ($cart_list as &$item) {
+
+    $stmtSubtotal = $pdo->prepare("
+        SELECT f_hitung_subtotal(?, ?) AS subtotal
+    ");
+
+    $stmtSubtotal->execute([
+        $item['harga'],
+        $item['jumlah_barang']
+    ]);
+
+    $result = $stmtSubtotal->fetch(PDO::FETCH_ASSOC);
+
+    $item['subtotal'] = $result['subtotal'];
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
