@@ -371,7 +371,7 @@ $metode_list = $stmtMetode->fetchAll(PDO::FETCH_ASSOC);
             <button class="modal-close" id="btnCloseModal">&times;</button>
             <h3 class="modal-title">Pembayaran</h3>
             
-            <form action="../public/transaksi.php" method="POSTss">
+            <form action="../public/transaksi.php" method="POST">
                 
                 <input type="hidden" name="total_harga" id="input_total_harga" value="<?= $total_harga ?>">
                 
