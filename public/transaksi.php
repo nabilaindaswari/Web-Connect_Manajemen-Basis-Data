@@ -9,10 +9,12 @@ require_once '../process/proses_transaksi.php';
 
 // Simulasi data untuk kebutuhan Front-End (Preview Struk)
 $tanggal = date('d/m/Y H:i');
-$no_struk = 'TRX-$nomor_struk';
+$no_struk = "TRX-$nomor_struk";
 
 $total_harga = isset($_POST['total_harga']) ? (int)$_POST['total_harga'] : 0;
 $total_bayar = isset($_POST['total_bayar']) ? (int)$_POST['total_bayar'] : 0;
+$id_metode = $_POST['id_metode'];
+$kasir = $_SESSION['nama_user'] ?? 'Kasir Default';
 $kembalian = $total_bayar - $total_harga;
 
 // Mengambil data keranjang sebelum dikosongkan oleh backend
@@ -326,7 +328,7 @@ $cart_list = $_SESSION['keranjang'] ?? [];
                     <span>Rp <?= number_format($total_harga, 0, ',', '.') ?></span>
                 </div>
                 <div class="summary-row">
-                    <span>BAYAR
+                    <span><?= htmlspecialchars($id_metode) ?>
                     </span>
                     <span>Rp <?= number_format($total_bayar, 0, ',', '.') ?></span>
                 </div>
