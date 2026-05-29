@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+require_once '../config/database.php';
 // // Redirect to HTTPS if this request is not secure
 // if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === 'off') {
 //     $redirectUrl = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -42,21 +42,21 @@ if (
 
 $_SESSION['last_login_attempt'] = time();
 
-$dsn     = 'mysql:host=localhost;dbname=tokosembako;charset=utf8mb4';
-$dbUser  = 'root';
-$dbPass  = '';
-$options = [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES   => false,
-];
+// $dsn     = 'mysql:host=localhost;dbname=tokosembako;charset=utf8mb4';
+// $dbUser  = 'root';
+// $dbPass  = '';
+// $options = [
+//     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+//     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+//     PDO::ATTR_EMULATE_PREPARES   => false,
+// ];
 
-try {
-    $pdo = new PDO($dsn, $dbUser, $dbPass, $options);
-} catch (PDOException $e) {
-    error_log('Database connection failed: ' . $e->getMessage());
-    redirectWithError('auth');
-}
+// try {
+//     $pdo = new PDO($dsn, $dbUser, $dbPass, $options);
+// } catch (PDOException $e) {
+//     error_log('Database connection failed: ' . $e->getMessage());
+//     redirectWithError('auth');
+// }
 
 
 /* ======================================================
