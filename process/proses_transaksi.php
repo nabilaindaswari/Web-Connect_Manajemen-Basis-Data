@@ -27,7 +27,16 @@ $kasir = $userRow ? $userRow['nama_lengkap'] : $username_session;
 
 
 
-$stmtTransaksi = $pdo->prepare("CALL SP_Checkout_Kasir(:p_id_kasir, :p_id_metode, :p_total_bayar, :p_json_keranjang, @kembalian, @idtransaksix)");
+$stmtTransaksi = $pdo->prepare("
+    CALL SP_Checkout_Kasir(
+        :p_id_kasir,
+        :p_id_metode,
+        :p_total_bayar,
+        :p_json_keranjang,
+        @kembalian,
+        @idtransaksix
+    )
+");
 // var_dump($id_metode);
 // die();
 $stmtTransaksi->execute([
