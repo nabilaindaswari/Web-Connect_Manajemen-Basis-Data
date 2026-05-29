@@ -63,7 +63,7 @@ try {
    AMBIL DATA USER BESERTA ACCESS LEVEL
 ====================================================== */
 
-$sql  = 'SELECT id_kasir, username, password_hash, access_level FROM kasir WHERE username = :username LIMIT 1';
+$sql  = 'SELECT id_kasir, nama_lengkap, username, password_hash, access_level FROM kasir WHERE username = :username LIMIT 1';
 $stmt = $pdo->prepare($sql);
 $stmt->execute([':username' => $username]);
 $user = $stmt->fetch();
@@ -102,6 +102,7 @@ unset($_SESSION['lockout_expires']);
 
 session_regenerate_id(true);
 $_SESSION['user_id']       = $user['id_kasir'];
+$_SESSION['nama_kasir']    = $user['nama_lengkap'] ?? 'Kasir';
 $_SESSION['username']      = $user['username'];
 $_SESSION['access_level']  = (int)$user['access_level'];
 $_SESSION['authenticated'] = true;
