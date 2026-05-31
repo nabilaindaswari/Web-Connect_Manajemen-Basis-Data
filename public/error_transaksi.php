@@ -1,8 +1,9 @@
 <?php
+require_once '../config/database.php';
 // Menerima variabel dari halaman sebelumnya, atau gunakan default jika kosong
 $judul_error = $judul_error ?? "Pemberitahuan Sistem";
 $pesan_error = $pesan_error ?? "Terjadi kesalahan atau halaman tidak valid.";
-$link_kembali = $link_kembali ?? "../public/kasir_home.php";
+# $link_kembali = $link_kembali ?? (isset($_SESSION['access_level']) && $_SESSION['access_level'] >= 11 ? '../public/admin_home.php' : '../public/kasir_home.php');
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -113,7 +114,7 @@ $link_kembali = $link_kembali ?? "../public/kasir_home.php";
         <h1><?= htmlspecialchars($judul_error) ?></h1>
         <p><?= htmlspecialchars($pesan_error) ?></p>
         
-        <a href="<?= htmlspecialchars($link_kembali) ?>" class="btn-back">Kembali</a>
+        <a href="<?= (isset($_SESSION['access_level']) && $_SESSION['access_level'] >= 11) ? '../public/admin_home.php' : '../public/kasir_home.php' ?>" class="btn-back">Kembali</a>
     </div>
 
 </body>
