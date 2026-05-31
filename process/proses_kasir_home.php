@@ -129,4 +129,4 @@ foreach ($barang_list as &$barang) {
     $barang['qty_dipesan'] = $qty_dipesan;
 }
 unset($barang);
-?>s
+?>
