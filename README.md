@@ -388,14 +388,14 @@ Contoh akun:
 ### Kasir Admin
 
 ```text
-Username : rizky
+Username : rizkyhadi
 Password : rizky123
 ```
 
 ### Kasir
 
 ```text
-Username : rizkyhadi
+Username : rizky
 Password : rizky123
 ```
 
