@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once '../config/database.php';
-
+$keranjangLoaded = false; // Flag untuk memastikan keranjang sudah dimuat sebelum transaksi
 // Pastikan PDO menggunakan mode Exception agar bisa menangkap SIGNAL dari database
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -9,7 +9,7 @@ if (empty($_SESSION['keranjang'])) {
     // Set variabel untuk ditampilkan di halaman error
     $judul_error = "Transaksi Sudah Diproses!";
     $pesan_error = "Keranjang Anda kosong atau halaman di-refresh. Silakan kembali ke halaman kasir untuk transaksi baru.";
-    $link_kembali = "../public/kasir_home.php";
+//    $link_kembali = "../public/kasir_home.php";
     
     // Panggil interface error
     require_once '../public/error_transaksi.php';
@@ -77,7 +77,9 @@ try {
     $nomor_struk = $getData['idtransaksix'];
 
     // [PENTING] Kosongkan keranjang setelah transaksi sukses agar tidak bisa dibeli lagi
-    unset($_SESSION['keranjang']);
+    if($keranjangLoaded) {
+        unset($_SESSION['keranjang']);
+    }
 
     // Redirect ke halaman sukses / cetak struk (PRG Pattern)
     // header("Location: struk.php?id=" . $nomor_struk);

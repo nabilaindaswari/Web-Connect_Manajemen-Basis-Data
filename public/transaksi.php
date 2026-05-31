@@ -336,6 +336,7 @@ foreach ($cart_list as &$item) {
                         <td class="col-total"><?= number_format($item['subtotal'], 0, ',', '.') ?></td>
                     </tr>
                     <?php endforeach; ?>
+                    <?php $keranjangLoaded=true; ?>
                 </tbody>
             </table>
 
@@ -370,6 +371,14 @@ foreach ($cart_list as &$item) {
         </div>
 
     </div>
+    <script>
+    window.onload = function() {
+        <?php if ($keranjangLoaded): ?>
+            // Hanya kosongkan keranjang jika sudah dimuat dan transaksi sukses
+            <?php unset($_SESSION['keranjang']); ?>
+        <?php endif; ?>
+    };
+    </script>
 
 </body>
 </html>
