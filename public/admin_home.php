@@ -404,6 +404,69 @@ require_once '../process/proses_admin_home.php';
             color: #d93025 !important;
             border-color: #d93025 !important;
         }
+
+        /* =========================================
+        CSS ERROR POP-OUT MODAL
+        ========================================= */
+        .error-modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+        }
+
+        .error-modal-overlay.active {
+            opacity: 1; visibility: visible;
+        }
+
+        .error-card {
+            background-color: #ffffff;
+            width: 100%; max-width: 380px;
+            padding: 35px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .error-modal-overlay.active .error-card {
+            transform: translateY(0);
+        }
+
+        .error-icon-wrapper {
+            width: 64px; height: 64px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .error-card h2 {
+            font-size: 20px; font-weight: 600; margin-bottom: 10px; color: #333;
+        }
+
+        .error-card p {
+            font-size: 14px; color: #666; line-height: 1.5; margin-bottom: 25px;
+        }
+
+        .error-btn-close {
+            display: inline-block; width: 100%;
+            background-color: var(--btn-lanjut-bg);
+            color: #ffffff; border: none;
+            padding: 12px 0; border-radius: 8px;
+            font-size: 15px; font-weight: 500;
+            cursor: pointer; transition: opacity 0.2s;
+            font-family: var(--font-main);
+        }
+
+        .error-btn-close:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
@@ -481,7 +544,7 @@ require_once '../process/proses_admin_home.php';
                                 onclick="openEditModal(event, <?= (int)$barang['id_barang'] ?>)">
                             edit
                         </button>
-                        <button type="submit" class="card-submit-area">
+                        <button type="submit" class="card-submit-area" onclick="return checkStock(event, <?= $barang['stok'] ?>, <?= $barang['qty_dipesan'] ?>)">
                             <div class="card-kategori">Kategori : <?= htmlspecialchars($barang['nama_kategori']) ?></div>
                             <div class="card-title"><?= htmlspecialchars($barang['nama_barang']) ?></div>
                             <div class="card-stok">Stok : <?= htmlspecialchars($barang['stok']) ?></div>
@@ -548,7 +611,14 @@ require_once '../process/proses_admin_home.php';
             </form>
         </div>
     </div>
-
+    <div class="error-modal-overlay" id="errorModalOverlay">
+        <div class="error-card">
+            <div class="error-icon-wrapper" id="errorIconWrapper"></div>
+            <h2 id="errorTitle">Judul Error</h2>
+            <p id="errorMessage">Pesan error di sini.</p>
+            <button type="button" class="error-btn-close" onclick="closeErrorModal()">Mengerti</button>
+        </div>
+    </div>
     <script>
         const modal      = document.getElementById('itemModal');
         const modalTitle = document.getElementById('modalTitle');
@@ -618,7 +688,53 @@ require_once '../process/proses_admin_home.php';
             document.getElementById('pict_hint').textContent = '';
             modal.classList.add('active');
         });
+        function checkStock(event, stok, qtyDipesan) {
+            // Konversi ke tipe data angka
+            stok = parseInt(stok);
+            qtyDipesan = parseInt(qtyDipesan);
 
+            if (stok === 0) {
+                // Error 2: Stok sudah habis total di database
+                event.preventDefault(); 
+                showError('habis');
+                return false;
+            } else if (qtyDipesan >= stok) {
+                // Error 1: Stok di keranjang sudah mencapai batas stok database
+                event.preventDefault(); 
+                showError('kurang');
+                return false;
+            }
+            
+            // Jika aman, lanjutkan proses submit ke add_cart.php
+            return true; 
+        }
+
+        function showError(type) {
+            const modal = document.getElementById('errorModalOverlay');
+            const title = document.getElementById('errorTitle');
+            const msg = document.getElementById('errorMessage');
+            const iconWrap = document.getElementById('errorIconWrapper');
+
+            if (type === 'habis') {
+                title.innerText = 'Stok Habis!';
+                msg.innerText = 'Maaf, barang ini sedang kosong dan tidak dapat ditambahkan ke keranjang.';
+                iconWrap.style.backgroundColor = '#fdf2f2'; // Merah muda pudar
+                iconWrap.style.color = '#e53e3e';           // Merah X
+                iconWrap.innerHTML = `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+            } else if (type === 'kurang') {
+                title.innerText = 'Stok Tidak Mencukupi!';
+                msg.innerText = 'Anda sudah memasukkan semua ketersediaan stok barang ini ke dalam keranjang.';
+                iconWrap.style.backgroundColor = '#fffaf0'; // Orange muda pudar
+                iconWrap.style.color = '#dd6b20';           // Orange !
+                iconWrap.innerHTML = `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`;
+            }
+
+            modal.classList.add('active');
+        }
+
+        function closeErrorModal() {
+            document.getElementById('errorModalOverlay').classList.remove('active');
+        }
         /* ── Buka Modal: Mode Edit ── */
         function openEditModal(event, id) {
             event.stopPropagation(); 
