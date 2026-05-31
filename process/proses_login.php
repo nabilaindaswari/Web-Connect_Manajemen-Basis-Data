@@ -8,8 +8,9 @@ require_once '../config/database.php';
 //     exit;
 // }
 
-const MAX_LOGIN_ATTEMPTS = 10000;
-const LOCKOUT_SECONDS    = 0; // 5 minutes
+const MAX_LOGIN_ATTEMPTS = 5;
+const LOCKOUT_SECONDS    = 300; // 5 minutes
+$sessionLocked = false;
 
 function redirectWithError(string $error): void
 {
@@ -37,7 +38,7 @@ if (
     $_SESSION['login_attempts'] >= MAX_LOGIN_ATTEMPTS &&
     time() - $_SESSION['last_login_attempt'] < LOCKOUT_SECONDS
 ) {
-    redirectWithError('auth');
+    redirectWithError('timeout');
 }
 
 $_SESSION['last_login_attempt'] = time();

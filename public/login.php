@@ -97,9 +97,11 @@
                         echo "Akses ditolak. Harap login sebagai admin.";
                     } else if($_GET['error'] == 'accesskasir') {
                         echo "Akses ditolak. Harap login sebagai kasir.";
+                    } else if ($_GET['error'] == 'timeout') {
+                        echo "Terlalu banyak upaya login yang gagal. Silakan coba lagi nanti.";
                     } else {
                         echo "Terjadi kesalahan. Silakan coba lagi.";
-                    }
+                    } 
                 ?>
             </div>
         <?php endif; ?>
