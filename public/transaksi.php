@@ -8,6 +8,7 @@ require_once '../process/proses_transaksi.php';
 ====================================================== */
 
 // Simulasi data untuk kebutuhan Front-End (Preview Struk)
+date_default_timezone_set('Asia/Jakarta');
 $tanggal = date('d/m/Y H:i');
 $no_struk = "TRX-$nomor_struk";
 
