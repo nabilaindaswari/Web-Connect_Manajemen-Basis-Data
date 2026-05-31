@@ -362,6 +362,70 @@ require_once '../process/proses_kasir_home.php';
         }
 
         .error-btn-close:hover { opacity: 0.9; }
+
+        /* =========================================
+        CSS TOMBOL LOGOUT & MODAL BUTTONS
+        ========================================= */
+        .btn-logout {
+            background-color: #8B3A3A; /* Warna merah gelap agar berbeda dari tombol aksi lain */
+            color: var(--text-light);
+            text-decoration: none;
+            padding: 10px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: opacity 0.2s;
+            cursor: pointer;
+            font-family: var(--font-main);
+        }
+
+        .btn-logout:hover {
+            opacity: 0.9;
+        }
+
+        .modal-action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn-batal {
+            flex: 1;
+            background-color: #EFE4D3;
+            color: var(--text-dark);
+            border: 1px solid #d4c6b3;
+            padding: 12px 0;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            font-family: var(--font-main);
+        }
+
+        .btn-yakin-keluar {
+            flex: 1;
+            background-color: #dd6b20; /* Warna orange yang sama dengan icon warning */
+            color: #ffffff;
+            border: none;
+            padding: 12px 0;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.2s;
+            font-family: var(--font-main);
+        }
+
+        .btn-batal:hover, .btn-yakin-keluar:hover {
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body>
@@ -433,6 +497,7 @@ require_once '../process/proses_kasir_home.php';
             </form>
                 <!-- (Kasir tidak memiliki tombol Tambah Produk Baru) -->
             </div>
+            <button type="button" class="btn-logout" onclick="openLogoutModal()">Log Out</button>
         </div>
 
         <!-- ## bagian grid daftar produk -->
@@ -495,14 +560,32 @@ require_once '../process/proses_kasir_home.php';
         <a href="checkout.php" class="btn-lanjutkan">Lanjutkan</a>
     </div>
     <div class="error-modal-overlay" id="errorModalOverlay">
-    <div class="error-card">
-        <div class="error-icon-wrapper" id="errorIconWrapper"></div>
-        <h2 id="errorTitle">Judul Error</h2>
-        <p id="errorMessage">Pesan error di sini.</p>
-        <button type="button" class="error-btn-close" onclick="closeErrorModal()">Mengerti</button>
+        <div class="error-card">
+            <div class="error-icon-wrapper" id="errorIconWrapper"></div>
+            <h2 id="errorTitle">Judul Error</h2>
+            <p id="errorMessage">Pesan error di sini.</p>
+            <button type="button" class="error-btn-close" onclick="closeErrorModal()">Mengerti</button>
+        </div>
     </div>
-</div>
-
+    <div class="error-modal-overlay" id="logoutModalOverlay">
+        <div class="error-card">
+            <div class="error-icon-wrapper" style="background-color: #fffaf0; color: #dd6b20;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+            </div>
+            
+            <h2>Konfirmasi Log Out</h2>
+            <p style="margin-bottom: 10px;">Apakah Anda yakin ingin keluar dari sistem?</p>
+            
+            <div class="modal-action-buttons">
+                <button type="button" class="btn-batal" onclick="closeLogoutModal()">Batal</button>
+                <a href="../process/logout.php" class="btn-yakin-keluar">Ya, Keluar</a>
+            </div>
+        </div>
+    </div>
     <script>
         function checkStock(event, stok, qtyDipesan) {
             // Konversi ke tipe data angka
@@ -551,6 +634,21 @@ require_once '../process/proses_kasir_home.php';
         function closeErrorModal() {
             document.getElementById('errorModalOverlay').classList.remove('active');
         }
+        function openLogoutModal() {
+            document.getElementById('logoutModalOverlay').classList.add('active');
+        }
+
+        function closeLogoutModal() {
+            document.getElementById('logoutModalOverlay').classList.remove('active');
+        }
+
+        // Menutup modal jika area gelap di luar card diklik
+        window.addEventListener('click', function(e) {
+            const logoutOverlay = document.getElementById('logoutModalOverlay');
+            if (e.target === logoutOverlay) {
+                closeLogoutModal();
+            }
+        });
     </script>
 </body>
 </html>
