@@ -482,7 +482,7 @@ require_once '../process/proses_admin_home.php';
                             edit
                         </button>
                         <button type="submit" class="card-submit-area">
-                            <div class="card-kategori">Kategori : <?= str_pad($barang['id_kategori'], 2, '0', STR_PAD_LEFT) ?></div>
+                            <div class="card-kategori">Kategori : <?= htmlspecialchars($barang['nama_kategori']) ?></div>
                             <div class="card-title"><?= htmlspecialchars($barang['nama_barang']) ?></div>
                             <div class="card-stok">Stok : <?= htmlspecialchars($barang['stok']) ?></div>
                             <div class="card-price">Rp. <?= number_format($barang['harga'], 0, ',', '.') ?></div>

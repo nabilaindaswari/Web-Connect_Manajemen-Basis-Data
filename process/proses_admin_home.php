@@ -1,8 +1,6 @@
 <?php
-
 session_start();
 require_once '../config/database.php';
-
 
 /* ======================================================
    GUARD: CEK AUTENTIKASI & HAK AKSES ADMIN (11-20)
@@ -19,15 +17,18 @@ if (
     exit;
 }
 
-
 /* ======================================================
-   SESSION KERANJANG
+   SESSION KERANJANG & PEMBUATAN TOKEN CHECKOUT
 ====================================================== */
 
 if (!isset($_SESSION['keranjang'])) {
     $_SESSION['keranjang'] = [];
 }
 
+// [TAMBAHAN BARU]: Buat token checkout jika belum ada untuk mencegah double submit
+if (empty($_SESSION['token_checkout'])) {
+    $_SESSION['token_checkout'] = bin2hex(random_bytes(16));
+}
 
 /* ======================================================
    HANDLE AKSI POST (TAMBAH / EDIT BARANG)
@@ -36,22 +37,20 @@ if (!isset($_SESSION['keranjang'])) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_barang'])) {
 
-    $id_barang    = isset($_POST['id_barang']) && $_POST['id_barang'] !== '' ? (int)$_POST['id_barang'] : null;
-    $nama_barang  = trim($_POST['nama_barang'] ?? '');
-    $id_kategori  = (int)($_POST['id_kategori'] ?? 0);
-    $stok         = (int)($_POST['stok'] ?? 0);
-    $harga        = (int)($_POST['harga'] ?? 0);
+    $id_barang   = isset($_POST['id_barang']) && $_POST['id_barang'] !== '' ? (int)$_POST['id_barang'] : null;
+    $nama_barang = trim($_POST['nama_barang'] ?? '');
+    $id_kategori = (int)($_POST['id_kategori'] ?? 0);
+    $stok        = (int)($_POST['stok'] ?? 0);
+    $harga       = (int)($_POST['harga'] ?? 0);
 
     /* --- Handle Upload Gambar --- */
     $nama_file = null;
 
     if (isset($_FILES['pict']) && $_FILES['pict']['error'] === UPLOAD_ERR_OK) {
-
         $ext_allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
         $ext         = strtolower(pathinfo($_FILES['pict']['name'], PATHINFO_EXTENSION));
 
         if (in_array($ext, $ext_allowed)) {
-
             $nama_file = uniqid('pict_', true) . '.' . $ext;
             $tujuan    = __DIR__ . '/../public/menuPict/' . $nama_file;
 
@@ -61,30 +60,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_barang'])) {
         }
     }
 
-
     if ($id_barang === null) {
-
         /* ------------------------------------------------
            MODE TAMBAH BARANG BARU
         ------------------------------------------------ */
-
         $pict_value = $nama_file ?? 'default.png';
 
         $stmtInsert = $pdo->prepare("
             INSERT INTO barang (nama_barang, id_kategori, stok, harga, pict)
             VALUES (?, ?, ?, ?, ?)
         ");
-
         $stmtInsert->execute([$nama_barang, $id_kategori, $stok, $harga, $pict_value]);
 
     } else {
-
         /* ------------------------------------------------
            MODE EDIT BARANG
         ------------------------------------------------ */
-
         if ($nama_file !== null) {
-
             /* Update termasuk gambar baru */
             $stmtUpdate = $pdo->prepare("
                 UPDATE barang
@@ -95,11 +87,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_barang'])) {
                     pict        = ?
                 WHERE id_barang = ?
             ");
-
             $stmtUpdate->execute([$nama_barang, $id_kategori, $stok, $harga, $nama_file, $id_barang]);
-
         } else {
-
             /* Update tanpa mengganti gambar */
             $stmtUpdate = $pdo->prepare("
                 UPDATE barang
@@ -109,7 +98,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_barang'])) {
                     harga       = ?
                 WHERE id_barang = ?
             ");
-
             $stmtUpdate->execute([$nama_barang, $id_kategori, $stok, $harga, $id_barang]);
         }
     }
@@ -119,14 +107,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_barang'])) {
     exit;
 }
 
-
 /* ======================================================
    HANDLE AJAX: AMBIL DATA BARANG UNTUK MODAL EDIT
    Dipanggil via fetch() di admin_home.php
 ====================================================== */
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['get_barang'])) {
-
     $id = (int)$_GET['get_barang'];
 
     $stmt = $pdo->prepare("
@@ -134,7 +120,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['get_barang'])) {
         FROM barang
         WHERE id_barang = ?
     ");
-
     $stmt->execute([$id]);
     $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -142,7 +127,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['get_barang'])) {
     echo json_encode($data ?: []);
     exit;
 }
-
 
 /* ======================================================
    AMBIL DATA BARANG + KATEGORI
@@ -153,7 +137,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['get_barang'])) {
 | FILTER SORT
 |--------------------------------------------------------------------------
 */
-
 $sort    = $_GET['sort'] ?? '';
 $orderBy = '';
 
@@ -163,13 +146,11 @@ if ($sort === 'termurah') {
     $orderBy = 'ORDER BY barang.harga DESC';
 }
 
-
 /*
 |--------------------------------------------------------------------------
 | FILTER KATEGORI
 |--------------------------------------------------------------------------
 */
-
 $kategoriFilter = $_GET['kategori'] ?? '';
 $where          = '';
 $params         = [];
@@ -179,13 +160,11 @@ if ($kategoriFilter !== '') {
     $params[] = $kategoriFilter;
 }
 
-
 /*
 |--------------------------------------------------------------------------
 | QUERY FINAL
 |--------------------------------------------------------------------------
 */
-
 $query = "
     SELECT
         barang.id_barang,
@@ -203,9 +182,8 @@ $query = "
 ";
 
 $stmtBarangList = $pdo->prepare($query);
-$stmtBarangList->execute($params);
+$stmtBarangList->execute($params); 
 $barang_list = $stmtBarangList->fetchAll(PDO::FETCH_ASSOC);
-
 
 /* ======================================================
    AMBIL DATA KATEGORI
@@ -215,7 +193,6 @@ $stmtKategori = $pdo->prepare("SELECT * FROM kategori");
 $stmtKategori->execute();
 $kategori_list = $stmtKategori->fetchAll(PDO::FETCH_ASSOC);
 
-
 /* ======================================================
    HITUNG TOTAL KERANJANG
 ====================================================== */
@@ -224,30 +201,25 @@ $total_keranjang = 0;
 $jumlah_item     = 0;
 
 foreach ($_SESSION['keranjang'] as $item) {
-
     $subtotal         = $item['harga'] * $item['jumlah_barang'];
     $total_keranjang += $subtotal;
     $jumlah_item     += $item['jumlah_barang'];
 }
-
 
 /* ======================================================
    TAMBAHKAN qty_dipesan KE MASING-MASING BARANG
 ====================================================== */
 
 foreach ($barang_list as &$barang) {
-
     $qty_dipesan = 0;
 
     foreach ($_SESSION['keranjang'] as $cart) {
-
         if ($cart['id_barang'] == $barang['id_barang']) {
             $qty_dipesan += $cart['jumlah_barang'];
         }
     }
-
+    
     $barang['qty_dipesan'] = $qty_dipesan;
 }
-
 unset($barang);
 ?>
