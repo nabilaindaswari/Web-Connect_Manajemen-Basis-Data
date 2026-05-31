@@ -37,7 +37,7 @@ if ($id_barang === null) {
 ====================================================== */
 
 $stmt = $pdo->prepare("
-    SELECT id_barang, nama_barang, harga
+    SELECT id_barang, nama_barang, harga, stok
     FROM barang
     WHERE id_barang = ?
 ");
@@ -61,8 +61,24 @@ if (!$barang) {
 $found = false;
 
 foreach ($_SESSION['keranjang'] as &$item) {
+
     if ($item['id_barang'] == $id_barang) {
-        $item['jumlah_barang']++;
+
+        // Jumlah setelah ditambah
+        $jumlah_baru = $item['jumlah_barang'] + 1;
+
+        // Cek stok database
+        if ($jumlah_baru > $barang['stok']) {
+
+            $_SESSION['error_cart'] =
+                "Stok {$barang['nama_barang']} tidak mencukupi. Stok tersedia: {$barang['stok']}";
+
+            header("Location: $redirect_page");
+            exit;
+        }
+
+        $item['jumlah_barang'] = $jumlah_baru;
+
         $found = true;
         break;
     }
@@ -72,6 +88,15 @@ unset($item);
 /* ======================================================
    JIKA BELUM ADA -> TAMBAHKAN
 ====================================================== */
+
+if ($barang['stok'] <= 0) {
+
+    $_SESSION['error_cart'] =
+        "{$barang['nama_barang']} sedang habis.";
+
+    header("Location: $redirect_page");
+    exit;
+}
 
 if (!$found) {
     $_SESSION['keranjang'][] = [
