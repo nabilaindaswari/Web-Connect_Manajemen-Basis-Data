@@ -6,9 +6,13 @@ require_once '../config/database.php';
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 if (empty($_SESSION['keranjang'])) {
-    echo "<h3>Transaksi Gagal atau Sudah Diproses!</h3>";
-    echo "<p>Keranjang Anda kosong. Silakan kembali ke halaman kasir.</p>";
-    echo "<a href='../public/kasir_home.php'>Kembali ke Kasir</a>";
+    // Set variabel untuk ditampilkan di halaman error
+    $judul_error = "Transaksi Sudah Diproses!";
+    $pesan_error = "Keranjang Anda kosong atau halaman di-refresh. Silakan kembali ke halaman kasir untuk transaksi baru.";
+    $link_kembali = "../public/kasir_home.php";
+    
+    // Panggil interface error
+    require_once '../public/error_transaksi.php';
     die(); // Berhenti di sini, jangan hubungi database!
 }
 
@@ -92,14 +96,13 @@ try {
         $pesan_error = preg_replace('/SQLSTATE\[.*\]:.*:/', '', $pesan_error);
     }
 
-    // Tampilkan pesan error ke user atau set ke flash session
-    // $_SESSION['error'] = trim($pesan_error);
-    // header("Location: halaman_keranjang.php");
-    // exit();
+    // Set variabel untuk ditampilkan di halaman error
+    $judul_error = "Gagal Memproses Transaksi!";
+    // $pesan_error sudah terisi dari logika exception di atas
+    $link_kembali = "javascript:history.back()"; 
     
-    echo "<h3>Gagal Memproses Transaksi!</h3>";
-    echo "<p>" . htmlspecialchars(trim($pesan_error)) . "</p>";
-    echo "<a href='javascript:history.back()'>Kembali</a>";
+    // Panggil interface error
+    require_once '../public/error_transaksi.php';
     die();
 }
 ?>
