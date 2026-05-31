@@ -41,7 +41,7 @@ Pada sisi database, sistem menerapkan beberapa konsep Manajemen Basis Data seper
 ## Struktur Folder Project
 
 ```text
-WEB-CONNECT_MANAGEMENT_BASIS_DATA/
+Web-Connect_Manajemen-Basis-Data/
 │
 ├── config/
 │   └── database.php
@@ -97,15 +97,15 @@ Copy folder project ke dalam direktori `htdocs`.
 Contoh lokasi folder:
 
 ```text
-C:\xampp\htdocs\WEB-CONNECT_MANAGEMENT_BASIS_DATA\
+C:\xampp\htdocs\Web-Connect_Manajemen-Basis-Data\
 ```
 
 Pastikan struktur folder project sudah benar, misalnya:
 
 ```text
-C:\xampp\htdocs\WEB-CONNECT_MANAGEMENT_BASIS_DATA\config\database.php
-C:\xampp\htdocs\WEB-CONNECT_MANAGEMENT_BASIS_DATA\public\home.php
-C:\xampp\htdocs\WEB-CONNECT_MANAGEMENT_BASIS_DATA\public\login.php
+C:\xampp\htdocs\Web-Connect_Manajemen-Basis-Data\config\database.php
+C:\xampp\htdocs\Web-Connect_Manajemen-Basis-Data\public\home.php
+C:\xampp\htdocs\Web-Connect_Manajemen-Basis-Data\public\login.php
 ```
 
 ---
@@ -170,13 +170,13 @@ Jika MySQL Anda menggunakan password, isi bagian $pass sesuai password MySQL yan
 Buka browser dan akses:
 
 ```text
-http://localhost/WEB-CONNECT_MANAGEMENT_BASIS_DATA/public/home.php
+http://localhost/Web-Connect_Manajemen-Basis-Data/public/home.php
 ```
 
 Untuk login, akses:
 
 ```text
-http://localhost/WEB-CONNECT_MANAGEMENT_BASIS_DATA/public/login.php
+http://localhost/Web-Connect_Manajemen-Basis-Data/public/login.php
 ```
 
 ---
