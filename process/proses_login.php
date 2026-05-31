@@ -107,7 +107,7 @@ $_SESSION['username']      = $user['username'];
 $_SESSION['access_level']  = (int)$user['access_level'];
 $_SESSION['authenticated'] = true;
 $_SESSION['last_activity'] = time();
-
+unset($_SESSION['keranjang']);
 
 /* ======================================================
    REDIRECT BERDASARKAN ACCESS LEVEL
