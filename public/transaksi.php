@@ -304,7 +304,7 @@ foreach ($cart_list as &$item) {
         <div class="receipt-card">
             <div class="receipt-header">
                 <h2>TOKO SEMBAKO INDOJAYA</h2>
-                <p>Jl. Contoh Alamat No. 123, Pontianak</p>
+                <p>Jl. Pikiran No. 404, Pontianak</p>
             </div>
 
             <div class="receipt-info">
