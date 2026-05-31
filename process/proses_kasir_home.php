@@ -18,11 +18,16 @@ if (
 }
 
 /* ======================================================
-   SESSION KERANJANG
+   SESSION KERANJANG & PEMBUATAN TOKEN CHECKOUT
 ====================================================== */
 
 if (!isset($_SESSION['keranjang'])) {
     $_SESSION['keranjang'] = [];
+}
+
+// [TAMBAHAN BARU]: Buat token checkout jika belum ada untuk mencegah double submit
+if (empty($_SESSION['token_checkout'])) {
+    $_SESSION['token_checkout'] = bin2hex(random_bytes(16));
 }
 
 /* ======================================================
@@ -34,47 +39,34 @@ if (!isset($_SESSION['keranjang'])) {
 | FILTER SORT
 |--------------------------------------------------------------------------
 */
-
 $sort = $_GET['sort'] ?? '';
-
 $orderBy = '';
 
 if ($sort === 'termurah') {
-
     $orderBy = 'ORDER BY barang.harga ASC';
-
 } elseif ($sort === 'termahal') {
-
     $orderBy = 'ORDER BY barang.harga DESC';
 }
-
 
 /*
 |--------------------------------------------------------------------------
 | FILTER KATEGORI
 |--------------------------------------------------------------------------
 */
-
 $kategoriFilter = $_GET['kategori'] ?? '';
-
 $where = '';
-
 $params = [];
 
 if ($kategoriFilter !== '') {
-
     $where = 'WHERE barang.id_kategori = ?';
-
     $params[] = $kategoriFilter;
 }
-
 
 /*
 |--------------------------------------------------------------------------
 | QUERY FINAL
 |--------------------------------------------------------------------------
 */
-
 $query = "
     SELECT 
         barang.id_barang,
@@ -93,13 +85,9 @@ $query = "
 
 $stmtBarangList = $pdo->prepare($query);
 
-$stmtBarangList->execute($params);
-
-
-$stmtBarangList->execute();
-
+// Eksekusi dengan parameter (Bug execute() ganda sudah dihapus)
+$stmtBarangList->execute($params); 
 $barang_list = $stmtBarangList->fetchAll(PDO::FETCH_ASSOC);
-
 
 /* ======================================================
    AMBIL DATA KATEGORI
@@ -109,9 +97,7 @@ $stmtKategori = $pdo->prepare("
     SELECT *
     FROM kategori
 ");
-
 $stmtKategori->execute();
-
 $kategori_list = $stmtKategori->fetchAll(PDO::FETCH_ASSOC);
 
 /* ======================================================
@@ -122,33 +108,25 @@ $total_keranjang = 0;
 $jumlah_item = 0;
 
 foreach ($_SESSION['keranjang'] as $item) {
-
     $subtotal = $item['harga'] * $item['jumlah_barang'];
-
     $total_keranjang += $subtotal;
-
     $jumlah_item += $item['jumlah_barang'];
 }
-
 
 /* ======================================================
    TAMBAHKAN qty_dipesan KE MASING-MASING BARANG
 ====================================================== */
 
 foreach ($barang_list as &$barang) {
-
     $qty_dipesan = 0;
-
+    
     foreach ($_SESSION['keranjang'] as $cart) {
-
         if ($cart['id_barang'] == $barang['id_barang']) {
-
             $qty_dipesan += $cart['jumlah_barang'];
         }
     }
-
+    
     $barang['qty_dipesan'] = $qty_dipesan;
 }
-
 unset($barang);
-?>
+?>s
