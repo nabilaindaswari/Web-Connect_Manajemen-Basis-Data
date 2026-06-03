@@ -1,5 +1,5 @@
 <?php
 
-echo password_hash("dasa", PASSWORD_DEFAULT);
+echo password_hash("rizky123", PASSWORD_DEFAULT);
 
 ?>

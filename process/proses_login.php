@@ -120,8 +120,11 @@ $accessLevel = $_SESSION['access_level'];
 
 if ($accessLevel >= 11 && $accessLevel <= 20) {
     header('Location: ../public/admin_home.php');
-} else {
+} else if ($accessLevel >= 1 && $accessLevel <= 10) {
     header('Location: ../public/kasir_home.php');
+} else {
+    session_destroy();
+    redirectWithError('revoked');
 }
 
 exit;
