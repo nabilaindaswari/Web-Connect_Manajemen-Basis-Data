@@ -346,7 +346,7 @@ foreach ($cart_list as &$item) {
                     <span>Rp <?= number_format($total_harga, 0, ',', '.') ?></span>
                 </div>
                 <div class="summary-row">
-                    <span><?= htmlspecialchars($id_metode) ?>
+                    <span><?= htmlspecialchars($metode) ?>
                     </span>
                     <span>Rp <?= number_format($total_bayar, 0, ',', '.') ?></span>
                 </div>

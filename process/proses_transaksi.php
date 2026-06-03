@@ -43,6 +43,13 @@ $stmtUser->execute([$id_kasir]);
 $userRow       = $stmtUser->fetch(PDO::FETCH_ASSOC);
 $kasir = $userRow ? $userRow['nama_lengkap'] : ($username_session ?? 'Kasir');
 
+
+/* Ambil nama_metode untuk ditampilkan di struk */
+$stmtMetode = $pdo->prepare("SELECT nama_metode FROM metode_pembayaran WHERE id_metode = ? LIMIT 1");
+$stmtMetode->execute([$id_metode]);
+$metodeRow = $stmtMetode->fetch(PDO::FETCH_ASSOC);
+$metode = $metodeRow ? $metodeRow['nama_metode'] : 'Metode Pembayaran Tidak Dikenal';
+
 // 2. Gunakan blok TRY...CATCH untuk menangani transaksi
 try {
     $stmtTransaksi = $pdo->prepare("
