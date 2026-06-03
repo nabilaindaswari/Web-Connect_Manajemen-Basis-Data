@@ -143,33 +143,44 @@ $metode_list = $stmtMetode->fetchAll(PDO::FETCH_ASSOC);
             width: 100%;
             background-color: var(--color-sidebar-light);
             padding: 15px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
             z-index: 10;
         }
 
-        .bottom-info {
-            font-weight: 600;
-            color: var(--color-text-dark);
-            font-size: 18px;
-        }
-
-        .btn-bayar {
-            background-color: var(--color-sidebar-dark);
-            color: white;
+        /* =========================================
+           FULL-WIDTH BOTTOM BAR BUTTON
+        ========================================= */
+        .bottom-bar-btn {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #688047;
+            color: #ffffff;
             border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
+            padding: 22px 20px;
+            font-size: 20px;
             font-weight: 600;
             cursor: pointer;
-            transition: opacity 0.3s;
+            display: flex;
+            justify-content: center; /* Menengahkan teks di dalam bar */
+            align-items: center;
+            gap: 15px; /* Jarak antara teks harga dan teks metode */
+            transition: background-color 0.2s ease-in-out;
             font-family: var(--font-main);
+            z-index: 100;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .btn-bayar:hover {
-            opacity: 0.9;
+        .bottom-bar-btn:hover:not(:disabled) {
+            background-color: #556b39;
+        }
+
+        .bottom-bar-btn:disabled {
+            background-color: #cccccc;
+            color: #888888;
+            cursor: not-allowed;
+            box-shadow: none;
         }
 
         /* Modal Styling */
@@ -323,7 +334,7 @@ $metode_list = $stmtMetode->fetchAll(PDO::FETCH_ASSOC);
         <div class="table-container">
             
 
-            <a href="<?= (isset($_SESSION['access_level']) && $_SESSION['access_level'] >= 11) ? '../public/admin_home.php' : '../public/kasir_home.php' ?>" class="btn-back">← Kembali ke Kasir</a>
+            <a href="<?= (isset($_SESSION['access_level']) && $_SESSION['access_level'] >= 11) ? '../public/admin_home.php' : '../public/kasir_home.php' ?>" class="btn-back">← Kembali</a>
            
             <h2 class="header-title">Rincian Pesanan</h2>
             
@@ -359,10 +370,9 @@ $metode_list = $stmtMetode->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- Bottom Bar -->
     <div class="bottom-bar">
-        <div class="bottom-info">
-            Total Amount : Rp. <?= number_format($total_harga, 0, ',', '.') ?>
-        </div>
-        <button class="btn-bayar" id="btnOpenModal" <?= empty($cart_list) ? 'disabled' : '' ?>>Pilih Metode Pembayaran</button>
+        <button type="button" class="bottom-bar-btn" id="btnOpenModal" <?= empty($cart_list) ? 'disabled' : '' ?>>
+        Total Harga: Rp <?= number_format($total_harga, 0, ',', '.') ?>
+        </button>
     </div>
 
     <!-- Modal Pembayaran -->
