@@ -48,16 +48,14 @@ Web-Connect_Manajemen-Basis-Data/
 │
 ├── process/
 │   ├── add_cart.php
-│   ├── hash.php
-│   ├── insert.php
 │   ├── kurang_cart.php
+│   ├── logout.php
 │   ├── proses_admin_home.php
 │   ├── proses_home.php
 │   ├── proses_kasir_home.php
 │   ├── proses_login.php
 │   ├── proses_register.php
 │   ├── proses_transaksi.php
-│   └── tempCodeRunnerFile.php
 │
 ├── public/
 │   ├── asset/
@@ -65,13 +63,15 @@ Web-Connect_Manajemen-Basis-Data/
 │   ├── admin_home.old.php
 │   ├── admin_home.php
 │   ├── checkout.php
+│   ├── error_transaksi.php
+│   ├── error.php
 │   ├── home.php
 │   ├── kasir_home.php
 │   ├── login.php
 │   └── transaksi.php
 │
-├── tokosembako.sql
-└── README.md
+├── README.md
+└── tokosembako.sql
 ```
 
 ---
