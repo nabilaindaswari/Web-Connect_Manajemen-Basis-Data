@@ -51,16 +51,24 @@ require_once '../process/proses_home.php';
             z-index: 10;
         }
 
-        .hamburger-menu {
-            padding: 20px 30px;
-            cursor: pointer;
+        /* =========================================
+        CSS USER PROFILE (SIDEBAR)
+        ========================================= */
+        .user-profile {
+            padding: 30px 30px 20px 30px;
+            border-bottom: 1px solid var(--sidebar-border);
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
-        .hamburger-menu div {
-            width: 30px;
-            height: 2px;
-            background-color: var(--text-light);
-            margin-bottom: 6px;
+        .user-profile .greeting-time {
+            font-size: 21px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2px;
+            font-family: var(--font-main);
         }
 
         .sidebar-menu {
@@ -226,8 +234,10 @@ require_once '../process/proses_home.php';
 <body>
 
     <aside class="sidebar">
-        <div class="hamburger-menu">
-            <div></div><div></div><div></div>
+        <div class="user-profile">
+            <div class="greeting-time"><?= $sapaan ?></div>
+            <div></div>
+            <div></div>
         </div>
         
         <div class="sidebar-menu">
