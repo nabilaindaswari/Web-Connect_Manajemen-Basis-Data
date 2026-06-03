@@ -53,16 +53,40 @@ require_once '../process/proses_kasir_home.php';
             z-index: 10;
         }
 
-        .hamburger-menu {
-            padding: 20px 30px;
-            cursor: pointer;
+        /* =========================================
+        CSS USER PROFILE (SIDEBAR)
+        ========================================= */
+        .user-profile {
+            padding: 30px 30px 20px 30px;
+            border-bottom: 1px solid var(--sidebar-border);
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
-        .hamburger-menu div {
-            width: 30px;
-            height: 2px;
-            background-color: var(--text-light);
-            margin-bottom: 6px;
+        .user-profile .greeting-time {
+            font-size: 21px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2px;
+            font-family: var(--font-main);
+        }
+
+        .user-profile .greeting-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-light);
+            line-height: 1.3;
+            font-family: var(--font-main);
+        }
+
+        .user-profile .role {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6); /* Warna putih yang memudar/transparan */
+            font-weight: 400;
+            font-family: var(--font-main);
+            letter-spacing: 0.5px;
         }
 
         .sidebar-menu {
@@ -155,8 +179,6 @@ require_once '../process/proses_kasir_home.php';
             padding-right: 20px;
         }
 
-        .
-
         /* Product Card */
         .product-card {
             background-color: transparent;
@@ -204,6 +226,7 @@ require_once '../process/proses_kasir_home.php';
             font-size: 14px;
             font-weight: 600;
         }
+
         .btn-kurang {
             position: absolute;
             top: 40px;
@@ -220,8 +243,7 @@ require_once '../process/proses_kasir_home.php';
             font-weight: 600;
         }
 
-
-    .card-bottom {
+       .card-bottom {
             background-color: var(--card-bottom-bg);
             flex: 1;
             padding: 15px;
@@ -432,11 +454,12 @@ require_once '../process/proses_kasir_home.php';
 
     <!-- ## bagian navigasi sidebar menu -->
     <aside class="sidebar">
-        <!-- ;tombol -> hamburger-menu sidebar -->
-        <div class="hamburger-menu">
-            <div></div>
-            <div></div>
-            <div></div>
+        <div class="user-profile">
+            <div class="greeting-time"><?= $sapaan ?></div>
+            <div class="greeting-name"><?= htmlspecialchars($_SESSION['nama_kasir'] ?? 'User') ?></div>
+            <div class="role">
+                <?= (isset($_SESSION['access_level']) && $_SESSION['access_level'] >= 11) ? 'Admin' : 'Kasir' ?>
+            </div>
         </div>
         
         <div class="sidebar-menu">
@@ -652,5 +675,3 @@ require_once '../process/proses_kasir_home.php';
     </script>
 </body>
 </html>
-
-```

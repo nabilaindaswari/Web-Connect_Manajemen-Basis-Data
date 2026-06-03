@@ -17,6 +17,28 @@ if (
     exit;
 }
 
+
+/* ======================================================
+   CEK TIMEZONE & SAPAAN BERDASARKAN WAKTU
+====================================================== */
+
+
+// Set zona waktu ke WIB (Waktu Indonesia Barat)
+date_default_timezone_set('Asia/Jakarta');
+$jam = (int)date('H'); // Ambil jam saat ini dalam format 24 jam (0-23)
+            
+// Logika penentuan sapaan
+if ($jam >= 4 && $jam < 11) {
+    $sapaan = "Selamat Pagi!";
+} elseif ($jam >= 11 && $jam < 15) {
+    $sapaan = "Selamat Siang!";
+} elseif ($jam >= 15 && $jam < 18) {
+    $sapaan = "Selamat Sore!";
+} else {
+    $sapaan = "Selamat Malam!";
+}
+
+
 /* ======================================================
    SESSION KERANJANG & PEMBUATAN TOKEN CHECKOUT
 ====================================================== */
