@@ -10,6 +10,8 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 } catch(PDOException $e) {
-    echo "Koneksi Gagal" . $e->getMessage();
+    // Arahkan ke halaman error kustom jika koneksi gagal
+    header('Location: ../public/error.php');
+    exit;
 }
 ?>
