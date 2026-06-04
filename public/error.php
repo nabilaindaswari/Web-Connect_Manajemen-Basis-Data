@@ -38,7 +38,7 @@
         /* 1. Komputer hijau dengan efek glow (cahaya) yang bernapas */
         .anim-computer {
             fill: #8da750; /* Warna hijau solid */
-            animation: glow-comp 2s infinite ease-in-out;
+            /* animation: glow-comp 2s infinite ease-in-out; */
         }
 
         @keyframes glow-comp {
@@ -74,8 +74,8 @@
         }
 
         @keyframes dim-flash {
-            0%, 100% { opacity: 0.1; }
-            50% { opacity: 0.4; }
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.1; }
         }
 
         /* --- TIPOGRAFI --- */
