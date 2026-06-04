@@ -503,6 +503,12 @@ CREATE TABLE `view_barang_kategori` (
 -- (See below for the actual view)
 --
 CREATE TABLE `view_transaksi_lengkap` (
+`id_transaksi` int(11)
+,`tanggal_transaksi` datetime
+,`total_harga` int(10) unsigned
+,`total_bayar` int(10) unsigned
+,`nama_lengkap` varchar(100)
+,`nama_metode` varchar(100)
 );
 
 -- --------------------------------------------------------
@@ -521,7 +527,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `view_transaksi_lengkap`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_transaksi_lengkap`  AS SELECT `t`.`id_transaksi` AS `id_transaksi`, `t`.`tanggal_transaksi` AS `tanggal_transaksi`, `t`.`total_harga` AS `total_harga`, `t`.`total_bayar` AS `total_bayar`, `k`.`nama_kasir` AS `nama_kasir`, `m`.`nama_metode` AS `nama_metode` FROM ((`transaksi` `t` join `kasir` `k` on(`t`.`id_kasir` = `k`.`id_kasir`)) join `metode_pembayaran` `m` on(`t`.`id_metode` = `m`.`id_metode`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_transaksi_lengkap`  AS SELECT `t`.`id_transaksi` AS `id_transaksi`, `t`.`tanggal_transaksi` AS `tanggal_transaksi`, `t`.`total_harga` AS `total_harga`, `t`.`total_bayar` AS `total_bayar`, `k`.`nama_lengkap` AS `nama_lengkap`, `m`.`nama_metode` AS `nama_metode` FROM ((`transaksi` `t` join `kasir` `k` on(`t`.`id_kasir` = `k`.`id_kasir`)) join `metode_pembayaran` `m` on(`t`.`id_metode` = `m`.`id_metode`)) ;
 
 --
 -- Indexes for dumped tables
