@@ -112,7 +112,7 @@
                         echo "Akses ditolak. Harap login sebagai kasir.";
                     } else if ($_GET['error'] == 'timeout') {
                         echo "Terlalu banyak upaya login yang gagal. Silakan coba lagi nanti.";
-                    } else if ($_GET['revoked'] == 'revoked') {
+                    } else if ($_GET['error'] == 'revoked') {
                         echo "Akun Anda telah dicabut aksesnya. Silakan hubungi admin.";
                     } else {
                         echo "Terjadi kesalahan. Silakan coba lagi.";
